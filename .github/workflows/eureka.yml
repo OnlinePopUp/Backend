@@ -1,27 +1,22 @@
 name: Spring CI/CD
 
-#트리거
+# 트리거
 on:
-  #원인
   push:
-    #대상 브랜치
     branches:
       - eureka
 
-#해야될 일
+# 해야 될 일
 jobs:
   cicd-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # https://github.com/actions/checkout 사용
-      # 해당 작업이 수행되면 본 레포지토리(저장소)가 체크아웃되어 os단에 저장
-      # name: 작업명 기술, uses: 실제할일 기술
-      - name: Github Repository내 파일들 checkout(불러오기) 수행
+      # GitHub Repository 파일 체크아웃
+      - name: Github Repository내 파일들 checkout 수행
         uses: actions/checkout@v4
 
-        # JDK 17 버전 설치
-        # https://github.com/actions/setup-java
+      # JDK 17 설치
       - name: JDK 17 버전 설치
         uses: actions/setup-java@v4
         with:
@@ -29,37 +24,38 @@ jobs:
           java-version: '17'
 
       # application.yml 동적 생성
-      # 소스 코드내에 위치
-      # RDS 세팅 이후 진행
       - name: application.properties 동적 생성
         run: |
           echo "${{ secrets.APPLICATION_EUREKA }}" > ./src/main/resources/application.yml
           ls ./src/main/resources/application.yml
-      
 
-      # build 준비
-      # chmod +x ./gradlew : 퍼미션 오류 발생 시 처리
-      # ./gradlew clean build
-      # 빌드 후 산출물(jar 파일) 확인
+      # 빌드 수행
       - name: 단위 테스트 및 빌드
         run: |
           if [ ! -x ./gradlew ]; then chmod +x ./gradlew; fi
           ./gradlew clean build
-          pwd
-          ls
           ls ./build/libs
 
-      # 이름이 너무 김으로 적당하게 수정 -> 리눅스 명령어
+      # 빌드 결과물 이름 변경
       - name: 관리상 빌드된 결과물의 이름을 변경 처리
         run: |
           mv ./build/libs/*SNAPSHOT.jar ./run.jar
           ls
 
-      # EC2로 업로드
-      # 호스팅정보(IP), 접속자명(ubuntu), 키파일(pem) -> 시크릿
-      # 업로드 대상(run.jar)
-      # 타겟(EC2)의 특정 경로(복사될 위치), /home/ubuntu/server/demo
+      # EC2에 JDK 17 설치 (자동화)
+      - name: EC2에 JDK 17 설치
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script_stop: true
+          script: |
+            sudo apt update
+            sudo apt install -y openjdk-17-jdk
+            java -version
 
+      # EC2로 빌드된 JAR 파일 업로드
       - name: EC2에 jar파일 업로드
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -69,18 +65,10 @@ jobs:
           source: run.jar
           target: /home/ubuntu/server/demo
 
-
+      # EC2에서 기존 서버 정리 및 애플리케이션 실행
       - name: SSH로 ec2에 정리 후, 접속 후 서버 가동
         uses: appleboy/ssh-action@v1.2.0
         with:
-
-          # 1. rm -rf 대상 => 대상의 폴더 및 하위 파일까지 삭제
-          # 2. 새롭게 폴더 생성 /home/ubuntu/server/web
-          # 3. jar 파일 이동
-          # 4. jar 파일이 존재하는 위치로 이동
-          # 5. 서버 중단
-          # 6. 서버 구동
-          # 7. 필요없는 폴더 삭제
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
