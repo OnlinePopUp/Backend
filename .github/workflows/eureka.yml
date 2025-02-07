@@ -83,7 +83,6 @@ jobs:
           # 7. 필요없는 폴더 삭제
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          password: ${{ secrets.PASSWORD }}
           key: ${{ secrets.EC2_KEY }}
           script_stop: true
           script: |
