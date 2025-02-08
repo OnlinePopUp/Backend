@@ -61,7 +61,9 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script_stop: true
           script: |
-            set -e  # 스크립트가 실패하면 즉시 종료하도록 설정
+            set -e  # 스크립트가 실패하면 즉시 종료되도록 설정
+            set -x  # 실행되는 명령어를 로그에 출력하여 디버깅 가능
+
             echo "SSH 접속 성공"
 
             # Redis 설치 여부 확인 및 설치
