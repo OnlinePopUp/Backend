@@ -61,39 +61,40 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script_stop: true
           script: |
+            set -e  # 스크립트가 실패하면 즉시 종료하도록 설정
+            echo "SSH 접속 성공"
+
             # Redis 설치 여부 확인 및 설치
-            if ! command -v redis-server &> /dev/null
-            then
+            if ! command -v redis-server &> /dev/null; then
               echo "Redis not found. Installing..."
-              sudo apt update
-              sudo apt install -y redis-server
+              sudo apt update && sudo apt install -y redis-server
               sudo systemctl enable redis
               sudo systemctl start redis
             else
               echo "Redis is already installed."
             fi
-            
-            # 기존 서버 정리
-            if [ -d "/home/ubuntu/server/auth" ]; then
-              rm -rf /home/ubuntu/server/auth
-            fi
-            mkdir /home/ubuntu/server/auth
+
+            # 기존 서버 정리 및 실행
+            echo "기존 서버 디렉토리 정리 및 실행 준비"
+            rm -rf /home/ubuntu/server/auth
+            mkdir -p /home/ubuntu/server/auth
             mv /home/ubuntu/server/demo/run.jar /home/ubuntu/server/auth/run.jar
             cd /home/ubuntu/server/auth
-            
+
             # 기존 실행 중인 애플리케이션 종료
+            echo "기존 애플리케이션 종료 중..."
             sudo fuser -k -n tcp 8081 || true
-            
+
             # Redis 실행 (혹시 중지된 경우)
-            if ! systemctl is-active --quiet redis; then
-              echo "Redis is not running, starting it..."
-              sudo systemctl start redis
-            else
-              echo "Redis is already running."
-            fi
-            
+            echo "Redis 서비스 재시작"
+            sudo systemctl restart redis
+
             # 애플리케이션 실행
+            echo "애플리케이션 실행 중..."
             nohup java -jar run.jar > ./output.log 2>&1 &
-            
+
             # 사용되지 않는 폴더 삭제
+            echo "불필요한 디렉토리 삭제"
             rm -rf /home/ubuntu/server/demo
+
+            echo "배포 완료"
