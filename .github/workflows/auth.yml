@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           source: run.jar
-          target: /home/ubuntu/server/auth
+          target: /home/ubuntu/server/demo
 
       # EC2에서 기존 서버 정리 및 애플리케이션 실행
       - name: SSH로 EC2 접속 후 서버 가동 및 Redis(Docker) 설정
@@ -90,23 +90,10 @@ jobs:
                 echo "Redis container is already running."
             fi
 
-            # 기존 서버 디렉터리 정리
-            sudo rm -rf /home/ubuntu/server/auth
-            sudo mkdir -p /home/ubuntu/server/auth
-
-            # 실행할 JAR 파일이 존재하는지 확인
-            if [ ! -f "/home/ubuntu/server/auth/run.jar" ]; then
-                echo "Error: run.jar not found!"
-                exit 1
-            fi
-
-            # 실행 중인 서버 종료 (8081 포트 사용하는 프로세스 강제 종료)
-            sudo fuser -k 8081/tcp || true
-
-            # JAR 파일 실행 권한 부여
-            sudo chmod +x /home/ubuntu/server/auth/run.jar
-
-            # 애플리케이션 실행 (nohup 로그 저장 경로 수정)
-            nohup java -jar /home/ubuntu/server/auth/run.jar > /home/ubuntu/server/auth/output.log 2>&1 &
-
-            echo "Server started successfully!"
+            rm -rf /home/ubuntu/server/auth
+            mkdir /home/ubuntu/server/auth
+            mv /home/ubuntu/server/demo/run.jar /home/ubuntu/server/auth/run.jar
+            cd /home/ubuntu/server/auth
+            sudo fuser -k -n tcp 8761 || true
+            nohup java -jar run.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/server/demo
