@@ -59,7 +59,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          script_stop: false
+          script_stop: true
           script: |
             # Docker 설치 여부 확인 및 설치
             if ! command -v docker &> /dev/null
@@ -77,7 +77,7 @@ jobs:
             sudo usermod -aG docker $USER
             newgrp docker
 
-            # Redis 컨테이너 실행 (sudo 추가)
+            # Redis 컨테이너 실행
             if [ ! "$(sudo docker ps -q -f name=redis)" ]; then
                 if [ "$(sudo docker ps -aq -f status=exited -f name=redis)" ]; then
                     # 기존 중지된 컨테이너 삭제
@@ -90,14 +90,23 @@ jobs:
                 echo "Redis container is already running."
             fi
 
-            # 기존 서버 정리 및 실행
+            # 기존 서버 디렉터리 정리
             sudo rm -rf /home/ubuntu/server/auth
             sudo mkdir -p /home/ubuntu/server/auth
-            sudo mv /home/ubuntu/server/auth/run.jar /home/ubuntu/server/auth/run.jar
-            cd /home/ubuntu/server/auth
 
-            # 기존 실행 중인 애플리케이션 종료
-            sudo fuser -k -n tcp 8081 || true
+            # 실행할 JAR 파일이 존재하는지 확인
+            if [ ! -f "/home/ubuntu/server/auth/run.jar" ]; then
+                echo "Error: run.jar not found!"
+                exit 1
+            fi
 
-            # 애플리케이션 실행
-            nohup java -jar run.jar > ./output.log 2>&1 &
+            # 실행 중인 서버 종료 (8081 포트 사용하는 프로세스 강제 종료)
+            sudo fuser -k 8081/tcp || true
+
+            # JAR 파일 실행 권한 부여
+            sudo chmod +x /home/ubuntu/server/auth/run.jar
+
+            # 애플리케이션 실행 (nohup 로그 저장 경로 수정)
+            nohup java -jar /home/ubuntu/server/auth/run.jar > /home/ubuntu/server/auth/output.log 2>&1 &
+
+            echo "Server started successfully!"
