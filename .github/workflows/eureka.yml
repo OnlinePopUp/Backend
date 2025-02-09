@@ -51,8 +51,13 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script_stop: true
           script: |
-            sudo apt update
-            sudo apt install -y openjdk-17-jdk
+            if ! java -version 2>&1 | grep -q "17"; then
+              echo "JDK 17 not found. Installing..."
+              sudo apt update
+              sudo apt install -y openjdk-17-jdk
+            else
+              echo "JDK 17 is already installed."
+            fi
             java -version
 
       # EC2로 빌드된 JAR 파일 업로드
