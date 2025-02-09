@@ -59,7 +59,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          script_stop: true
+          script_stop: false
           script: |
             # Docker 설치 여부 확인 및 설치
             if ! command -v docker &> /dev/null
