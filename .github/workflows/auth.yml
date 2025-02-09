@@ -50,10 +50,10 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           source: run.jar
-          target: /home/ubuntu/server/demo
+          target: /home/ubuntu/server/auth
 
       # EC2에서 기존 서버 정리 및 애플리케이션 실행
-      - name: SSH로 EC2 접속 후 서버 가동 및 Redis 설정
+      - name: SSH로 EC2 접속 후 서버 가동 및 Redis(Docker) 설정
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -61,35 +61,38 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script_stop: true
           script: |
-            # Redis 설치 여부 확인 및 설치
-            if ! command -v redis-server &> /dev/null
+            # Docker 설치 여부 확인 및 설치
+            if ! command -v docker &> /dev/null
             then
-              echo "Redis not found. Installing..."
+              echo "Docker not found. Installing..."
               sudo apt update
-              sudo apt install -y redis-server
-              sudo systemctl enable redis
-              sudo systemctl start redis
+              sudo apt install -y docker.io
+              sudo systemctl enable docker
+              sudo systemctl start docker
             else
-              echo "Redis is already installed."
+              echo "Docker is already installed."
             fi
 
-            # Redis 경로 추가
-            echo "/usr/bin" >> $GITHUB_PATH
+            # Redis 컨테이너 실행
+            if [ ! "$(docker ps -q -f name=redis)" ]; then
+                if [ "$(docker ps -aq -f status=exited -f name=redis)" ]; then
+                    # 기존 중지된 컨테이너 삭제
+                    docker rm redis
+                fi
+                # 새 Redis 컨테이너 실행
+                docker run -d --name redis --restart always -p 6379:6379 redis:latest
+            else
+                echo "Redis container is already running."
+            fi
 
             # 기존 서버 정리 및 실행
             rm -rf /home/ubuntu/server/auth
             mkdir /home/ubuntu/server/auth
-            mv /home/ubuntu/server/demo/run.jar /home/ubuntu/server/auth/run.jar
+            mv /home/ubuntu/server/auth/run.jar /home/ubuntu/server/auth/run.jar
             cd /home/ubuntu/server/auth
 
             # 기존 실행 중인 애플리케이션 종료
             sudo fuser -k -n tcp 8081 || true
 
-            # Redis 실행 (혹시 중지된 경우)
-            sudo systemctl restart redis
-
             # 애플리케이션 실행
             nohup java -jar run.jar > ./output.log 2>&1 &
-
-            # 사용되지 않는 폴더 삭제
-            rm -rf /home/ubuntu/server/demo
