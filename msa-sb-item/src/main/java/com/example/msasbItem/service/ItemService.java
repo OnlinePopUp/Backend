@@ -20,7 +20,7 @@ public class ItemService {
     public void saveItem(String email, ItemCreateDto itemCreateDto) {
         // 이메일을 기반으로 PopUpEntity 조회
         PopUpEntity popUpEntity = popUpRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."));
 
         // ItemEntity 생성 및 저장
         ItemEntity item = ItemEntity.builder()
@@ -35,8 +35,11 @@ public class ItemService {
     }
 
     // 모든 아이템 조회
-    public List<ItemEntity> getAllItems() {
-        return itemRepository.findAll();
+    public List<ItemEntity> getAllItems(String email) {
+        // 이메일을 기반으로 PopUpEntity 조회
+        PopUpEntity popUpEntity = popUpRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."));
+        return itemRepository.findByPopId(popUpEntity.getPopId());
     }
 
     // 특정 아이템 조회

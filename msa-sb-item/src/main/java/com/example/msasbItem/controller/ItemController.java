@@ -27,8 +27,8 @@ public class ItemController {
 
     // 아이템 목록 조회
     @GetMapping
-    public ResponseEntity<List<ItemEntity>> getAllItems() {
-        List<ItemEntity> items = itemService.getAllItems();
+    public ResponseEntity<List<ItemEntity>> getAllItems(@RequestHeader ("X-Auth-User") String email) {
+        List<ItemEntity> items = itemService.getAllItems(email);
         return ResponseEntity.ok(items);
     }
 
