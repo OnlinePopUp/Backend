@@ -1,17 +1,15 @@
-package com.example.msasbItem.entity;
+package com.example.msasbItem.dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "order_table")  // order는 예약어라 order_table로 설정
 @Data
 @NoArgsConstructor
-public class OrderEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OrderDto {
     private Long orderId;
     private Long itemId;
     private Long popId;
@@ -24,8 +22,9 @@ public class OrderEntity {
     private String orderDate;
 
     @Builder
-    public OrderEntity(Long itemId, Long popId, String email,
+    public OrderDto(Long orderId, Long itemId, Long popId, String email,
                        Long totalPrice, String buyerName, String buyerAddress, String buyerPhone, Long totalAmount, String orderDate) {
+        this.orderId = orderId;
         this.itemId = itemId;
         this.popId = popId;
         this.email = email;

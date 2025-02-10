@@ -8,4 +8,5 @@ import java.util.List;
 public interface CartRepository extends JpaRepository<CartEntity, Long> {
     CartEntity findByEmailAndItemIdAndPopId(String email, Long itemId, Long popId);
     List<CartEntity> findByEmail(String email);
+    void deleteByEmail(String email); // 주문 완료 후 장바구니 삭제 메소드
 }

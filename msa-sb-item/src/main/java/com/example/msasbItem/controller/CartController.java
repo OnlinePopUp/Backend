@@ -42,5 +42,4 @@ public class CartController {
         cartService.decreaseCartItem(email, popId, itemId, cartDto.getAmount());
         return ResponseEntity.ok().build();
     }
-
 }

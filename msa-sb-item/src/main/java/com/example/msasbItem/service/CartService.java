@@ -67,6 +67,7 @@ public class CartService {
         // 엔티티 리스트를 DTO 리스트로 변환
         return cartEntities.stream()
                 .map(cart -> CartDto.builder()
+                        .cartId(cart.getCartId())
                         .itemId(cart.getItemId())
                         .itemName(cart.getItemName())
                         .amount(cart.getAmount())

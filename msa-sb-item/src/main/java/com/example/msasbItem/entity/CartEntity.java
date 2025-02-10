@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class CartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long cartId;
     private Long itemId;
     private String email;
