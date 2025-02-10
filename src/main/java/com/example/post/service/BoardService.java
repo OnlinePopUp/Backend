@@ -3,6 +3,7 @@ package com.example.post.service;
 import com.example.post.dto.BoardDto;
 import com.example.post.dto.CommentDto;
 import com.example.post.entity.*;
+import com.example.post.jwt.JwtUtil;
 import com.example.post.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardHeartRepository boardHeartRepository;
     private final CommentRepository commentRepository;
+    private final JwtUtil jwtUtil;
 
     public ResponseEntity<?> write(String name, String content, String email,
                                     List<MultipartFile> files) throws IOException {
@@ -182,12 +184,23 @@ public class BoardService {
         ));
     }
 
-    public ResponseEntity<?> update(long boardId, String content) {
+    public ResponseEntity<?> update(String token, long boardId, String content) {
         // jwt에서 현재 로그인한 유저 이메일과 board의 이메일 확인 작업 추가
         Board board = boardRepository.findById(boardId).orElse(null);
 
         if(board == null)
             return ResponseEntity.badRequest().body("게시글이 존재하지 않습니다.");
+
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지 않은 토큰");
+        }
+
+        if(!email.equals(board.getEmail()))
+            return ResponseEntity.badRequest().body("작성자만 수정할 수 있습니다.");
+
 
         board.setContent(content);
         boardRepository.save(board);
@@ -195,8 +208,24 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<?> delete(long boardId) {
-        // jwt에서 현재 로그인한 유저 이메일과 board의 이메일 확인 작업 추가
+    public ResponseEntity<?> delete(String token, long boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+
+        if(board == null)
+            return ResponseEntity.badRequest().body("게시글이 존재하지 않습니다.");
+
+        String email;
+        String role;
+        try{
+            email = jwtUtil.getEmail(token);
+            role = jwtUtil.getRole(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지 않은 토큰");
+        }
+
+        if(!email.equals(board.getEmail()) && !role.equals("ADMIN") )
+            return ResponseEntity.badRequest().body("작성자 or 관리자만 삭제할 수 있습니다.");
+
         boardRepository.deleteById(boardId);
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }

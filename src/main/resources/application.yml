@@ -29,3 +29,9 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 15
     lease-expiration-duration-in-seconds: 20
+
+jwt:
+  token:
+    secret: 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+  access-token-expiration: 36000000  # 1??
+  refresh-token-expiration: 604800000  # 7?

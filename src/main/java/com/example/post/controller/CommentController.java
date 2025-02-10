@@ -3,10 +3,7 @@ package com.example.post.controller;
 import com.example.post.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/comment")
@@ -20,13 +17,13 @@ public class CommentController {
     // 업데이트 딜리트 좋아요 좋취
 
     @PostMapping("/update/{cmtId}") // jwt로 이메일 검증
-    public ResponseEntity<?> update(@PathVariable long cmtId, String content) {
-        return commentService.update(cmtId, content);
+    public ResponseEntity<?> update(@RequestHeader("Authorization") String token,@PathVariable long cmtId, String content) {
+        return commentService.update(token, cmtId, content);
     }
 
     @PostMapping("/delete/{cmtId}")
-    public ResponseEntity<?> delete(@PathVariable long cmtId) {
-        return commentService.delete(cmtId);
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String token,@PathVariable long cmtId) {
+        return commentService.delete(token,cmtId);
     }
 
     @PostMapping("/like/{cmtId}")

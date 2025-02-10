@@ -27,7 +27,7 @@ public class BoardController {
         return boardService.getAll(size, page);
     }
 
-    @GetMapping("/{boardId}") //게시글 상세 조회 , 댓글 반환 까지 추후 설정
+    @GetMapping("/{boardId}") //게시글 상세 조회
     public ResponseEntity<?> get(@PathVariable long boardId) {
         return boardService.getPost(boardId);
     }
@@ -38,13 +38,13 @@ public class BoardController {
     }
 
     @PostMapping("/update/{boardId}") // 게시글 수정, 추후 jwt와 연동 후 email로 확인 작업 추가
-    public ResponseEntity<?> update(@PathVariable long boardId,String content) {
-        return boardService.update(boardId,content);
+    public ResponseEntity<?> update(@RequestHeader("Authorization") String token,@PathVariable long boardId,String content) {
+        return boardService.update(token,boardId,content);
     }
 
     @PostMapping("/delete/{boardId}") // 게시글 삭제, 추후 jwt와 연동 후 email로 확인 작업 추가
-    public ResponseEntity<?> delete(@PathVariable long boardId) {
-        return boardService.delete(boardId);
+    public ResponseEntity<?> delete(@RequestHeader("Authorization") String token,@PathVariable long boardId) {
+        return boardService.delete(token,boardId);
     }
 
     @PostMapping("/like/{boardId}")
