@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+
+// 테스트를 위해 임시로 구현
 
 @Entity
 @Table(name = "popUp")

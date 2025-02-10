@@ -6,21 +6,20 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CartReqDto {
-
+public class CartDto {
     private Long itemId;
     private String email;
-    private Integer totalPrice;
-    private Integer quantity;
+    private Long price;
+    private Long amount;
     private String itemName;
     private Long popId; // popUpEntity의 ID만 전달
 
     @Builder
-    public CartReqDto(Long itemId, String email, Integer totalPrice, Integer quantity, String itemName, Long popId) {
+    public CartDto(Long itemId, String email, Long price, Long amount, String itemName, Long popId) {
         this.itemId = itemId;
         this.email = email;
-        this.totalPrice = totalPrice;
-        this.quantity = quantity;
+        this.price = price;
+        this.amount = amount;
         this.itemName = itemName;
         this.popId = popId;
     }

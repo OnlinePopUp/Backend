@@ -34,6 +34,7 @@ public class ItemService {
 
         itemRepository.save(item);
     }
+
     // 아이템 조회
     public List<ItemDto> getAllItems(Long popId) {
         // 이메일을 기반으로 PopUpEntity 조회
@@ -52,6 +53,7 @@ public class ItemService {
                         .build())
                 .collect(Collectors.toList());
     }
+
     // 아이템 수정
     public void updateItem(Long popId, Long itemId, ItemDto itemDto) {
         ItemEntity popItem = itemRepository.findById(popId)
@@ -71,6 +73,7 @@ public class ItemService {
         
         itemRepository.save(item);
     }
+
     // 아이템 삭제
     public void deleteItem(Long popId, Long id) {
         ItemEntity popItem = itemRepository.findById(popId)

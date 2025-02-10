@@ -1,7 +1,6 @@
 package com.example.msasbItem.controller;
 
 import com.example.msasbItem.dto.ItemDto;
-import com.example.msasbItem.entity.ItemEntity;
 import com.example.msasbItem.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +32,12 @@ public class ItemController {
     }
 
     // 선택한 아이템 수정
-    @PutMapping("/{popId}/{id}")
+    @PutMapping("/{popId}/{itemId}")
     public ResponseEntity<ItemDto> updateItem(
             @PathVariable Long popId,
-            @PathVariable Long id,
+            @PathVariable Long itemId,
             @RequestBody ItemDto itemDto) {
-        itemService.updateItem(popId, id, itemDto);
+        itemService.updateItem(popId, itemId, itemDto);
         return ResponseEntity.ok().body(itemDto);
     }
 

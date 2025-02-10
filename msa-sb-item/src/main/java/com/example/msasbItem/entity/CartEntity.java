@@ -17,20 +17,19 @@ public class CartEntity {
     private Long cartId;
     private Long itemId;
     private String email;
-    @ManyToOne
-    @JoinColumn(name = "popId", nullable = false)
-    private PopUpEntity popId;
-    private Integer totalPrice;
-    private Integer quantity;
+    private Long popId;
+    private Long price;
+    private Long amount;
     private String itemName;
 
     @Builder
-    public CartEntity(Long cartId, Long itemId, String email, Integer totalPrice, Integer quantity, String itemName) {
+    public CartEntity(Long cartId, Long itemId, String email, Long price, Long amount, String itemName, Long popId) {
         this.cartId = cartId;
         this.itemId = itemId;
         this.email = email;
-        this.totalPrice = totalPrice;
-        this.quantity = quantity;
+        this.price = price;
+        this.amount = amount;
         this.itemName = itemName;
+        this.popId = popId;
     }
 }
