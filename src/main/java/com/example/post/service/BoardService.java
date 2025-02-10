@@ -49,7 +49,7 @@ public class BoardService {
 
             for(MultipartFile file : files){
                 String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                String savePath = "C:/file_upload_test/" + fileName;
+                String savePath = "/home/ubuntu/server/uploads/" + fileName;
                 file.transferTo(new File(savePath));
 
                 BoardFile boardFile = new BoardFile();
