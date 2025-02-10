@@ -4,7 +4,7 @@ name: Spring CI/CD
 on:
   push:
     branches:
-      - eureka
+      - post
 
 # 해야 될 일
 jobs:
