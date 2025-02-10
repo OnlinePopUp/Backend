@@ -8,6 +8,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 public class ItemDto {
+    private Long itemId;
     private Long popId;
     private String name;  // 아이템 이름
     private Long amount;  // 재고 수량
@@ -15,7 +16,8 @@ public class ItemDto {
     private String des;   // 설명
 
     @Builder
-    public ItemDto(Long popId, String name, Long amount, Long price, String des) {
+    public ItemDto(Long itemId, Long popId, String name, Long amount, Long price, String des) {
+        this.itemId = itemId;
         this.popId = popId;
         this.name = name;
         this.amount = amount;

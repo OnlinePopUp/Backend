@@ -23,7 +23,6 @@ import lombok.ToString;
 public class ItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long itemId;
 
     private Long popId;
@@ -31,6 +30,7 @@ public class ItemEntity {
     private Long amount;
     private Long price;
     private String des;
+    private String email;
 
     @Builder
     public ItemEntity(Long popId, String name, Long amount, Long price, String des) {
@@ -39,6 +39,11 @@ public class ItemEntity {
         this.amount = amount;
         this.price = price;
         this.des = des;
+    }
+
+    // ownerEmail Getter
+    public String getOwnerEmail() {
+        return email;
     }
 }
 

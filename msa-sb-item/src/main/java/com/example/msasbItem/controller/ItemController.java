@@ -1,7 +1,6 @@
 package com.example.msasbItem.controller;
 
 import com.example.msasbItem.dto.ItemDto;
-import com.example.msasbItem.dto.ItemListDto;
 import com.example.msasbItem.entity.ItemEntity;
 import com.example.msasbItem.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +25,29 @@ public class ItemController {
         return ResponseEntity.ok().body(itemDto);
     }
 
-    // 자신이 등록한 아이템 목록 조회
-    @GetMapping
-    public ResponseEntity<List<ItemListDto>> getAllItems(@RequestHeader ("X-Auth-User") String email) {
-        List<ItemListDto> items = itemService.getAllItems(email);
+    // 선택한 popId를 기반으로 아이템 보기
+    @GetMapping("/{popId}")
+    public ResponseEntity<List<ItemDto>> getAllItems(@PathVariable Long popId) {
+        List<ItemDto> items = itemService.getAllItems(popId);
         return ResponseEntity.ok(items);
     }
 
+    // 선택한 아이템 수정
+    @PutMapping("/{popId}/{id}")
+    public ResponseEntity<ItemDto> updateItem(
+            @PathVariable Long popId,
+            @PathVariable Long id,
+            @RequestBody ItemDto itemDto) {
+        itemService.updateItem(popId, id, itemDto);
+        return ResponseEntity.ok().body(itemDto);
+    }
 
-
-
-
-    // 아이템 상세정보 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<ItemEntity> getItemById(@PathVariable Long id) {
-        ItemEntity item = itemService.getItemById(id);
-        return ResponseEntity.ok(item);
+    // 선택한 아이템 삭제
+    @DeleteMapping("/{popId}/{id}")
+    public ResponseEntity<Void> deleteItem(
+            @PathVariable Long popId,
+            @PathVariable Long id) {
+        itemService.deleteItem(popId, id);
+        return ResponseEntity.noContent().build();
     }
 }
