@@ -1,5 +1,6 @@
 package com.example.post.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.example.post.dto.BoardDto;
 import com.example.post.dto.CommentDto;
 import com.example.post.entity.*;
@@ -31,6 +32,7 @@ public class BoardService {
     private final BoardHeartRepository boardHeartRepository;
     private final CommentRepository commentRepository;
     private final JwtUtil jwtUtil;
+    private final AwsS3Service awsS3Service;
 
     public ResponseEntity<?> write(String name, String content, String email,
                                     List<MultipartFile> files) throws IOException {
@@ -48,14 +50,17 @@ public class BoardService {
             boardRepository.save(board);
 
             for(MultipartFile file : files){
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                String savePath = "/home/ubuntu/server/uploads/" + fileName;
-                file.transferTo(new File(savePath));
+                try{
+                    awsS3Service.upload(file);
+                    String url = awsS3Service.upload(file);
 
-                BoardFile boardFile = new BoardFile();
-                boardFile.setBoardId(board.getBoardId());
-                boardFile.setBf(savePath);
-                boardFileRepository.save(boardFile);
+                    BoardFile boardFile = new BoardFile();
+                    boardFile.setBoardId(board.getBoardId());
+                    boardFile.setBf(url);
+                    boardFileRepository.save(boardFile);
+                }catch(Exception e){
+                    return ResponseEntity.badRequest().body("파일 형식이 잘못됨");
+                }
             }
         }
 
