@@ -29,7 +29,9 @@ public class SecurityConfig {
         http.securityContextRepository(NoOpServerSecurityContextRepository.getInstance());
 
         http.authorizeExchange(auth -> auth
-                .pathMatchers("/auth/login","/auth/join", "auth/reissue","/").permitAll()
+                .pathMatchers("/auth/login","/auth/join", "/auth/reissue",
+                        "/post",
+                "/comment").permitAll()
                 .pathMatchers("/user/admin").hasRole("ROLE_ADMIN")
                 .anyExchange().authenticated());
 
