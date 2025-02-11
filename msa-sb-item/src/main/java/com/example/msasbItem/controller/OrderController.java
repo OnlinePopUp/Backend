@@ -20,16 +20,16 @@ public class OrderController {
     // 주문 하기
     @PostMapping
     public ResponseEntity<OrderDto> createItem(
-            @RequestHeader("X-Auth-User") String email,
+            @RequestHeader("Authorization") String token,
             @RequestBody OrderDto orderDto) {
-        orderService.orderItem(email, orderDto);
+        orderService.orderItem(token, orderDto);
         return ResponseEntity.ok().body(orderDto);
     }
 
     // 주문 조회
     @GetMapping("/list")
-    public ResponseEntity<List<OrderDto>> getOrderItems(@RequestHeader("X-Auth-User") String email) {
-        List<OrderDto> orderItem = orderService.getOrderItems(email);
+    public ResponseEntity<List<OrderDto>> getOrderItems(@RequestHeader("Authorization") String token) {
+        List<OrderDto> orderItem = orderService.getOrderItems(token);
         return ResponseEntity.ok().body(orderItem);
     }
 }

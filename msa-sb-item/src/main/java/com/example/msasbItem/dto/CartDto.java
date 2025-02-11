@@ -14,9 +14,10 @@ public class CartDto {
     private Long amount;
     private String itemName;
     private Long popId; // popUpEntity의 ID만 전달
+    private String imageUrl;
 
     @Builder
-    public CartDto(Long cartId, Long itemId, String email, Long price, Long amount, String itemName, Long popId) {
+    public CartDto(Long cartId, Long itemId, String email, Long price, Long amount, String itemName, Long popId, String imageUrl) {
         this.cartId = cartId;
         this.itemId = itemId;
         this.email = email;
@@ -24,5 +25,6 @@ public class CartDto {
         this.amount = amount;
         this.itemName = itemName;
         this.popId = popId;
+        this.imageUrl = imageUrl;
     }
 }

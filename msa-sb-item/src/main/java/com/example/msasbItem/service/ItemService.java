@@ -3,6 +3,7 @@ package com.example.msasbItem.service;
 import com.example.msasbItem.dto.ItemDto;
 import com.example.msasbItem.entity.ItemEntity;
 import com.example.msasbItem.entity.PopUpEntity;
+import com.example.msasbItem.jwt.JwtUtil;
 import com.example.msasbItem.repository.ItemRepository;
 import com.example.msasbItem.repository.PopUpRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,15 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final PopUpRepository popUpRepository;
+    private final JwtUtil jwtUtil;
 
     // 아이템 생성
-    public void saveItem(String email, ItemDto itemDto) {
+    public void saveItem(String token, ItemDto itemDto) {
         // 이메일을 기반으로 PopUpEntity 조회
-        PopUpEntity popUpEntity = popUpRepository.findByEmail(email)
+        PopUpEntity popUpEntity = popUpRepository.findByEmail(jwtUtil.getEmail(token))
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."));
+
+        System.out.println("해당 이메일을 가진 팝업 스토어가 존재합니다.");
 
         ItemEntity item = ItemEntity.builder()
                 .popId(popUpEntity.getPopId())
@@ -30,6 +34,8 @@ public class ItemService {
                 .amount(itemDto.getAmount())
                 .price(itemDto.getPrice())
                 .des(itemDto.getDes())
+                .email(jwtUtil.getEmail(token))
+                .imageUrl(itemDto.getImageUrl())
                 .build();
 
         itemRepository.save(item);
@@ -50,6 +56,8 @@ public class ItemService {
                         .amount(i.getAmount())
                         .price(i.getPrice())
                         .des(i.getDes())
+                        .email(i.getEmail())
+                        .imageUrl(i.getImageUrl())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -70,6 +78,7 @@ public class ItemService {
         item.setAmount(itemDto.getAmount());
         item.setPrice(itemDto.getPrice());
         item.setDes(itemDto.getDes());
+        item.setImageUrl(itemDto.getImageUrl());
         
         itemRepository.save(item);
     }

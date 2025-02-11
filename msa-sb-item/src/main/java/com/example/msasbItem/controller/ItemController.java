@@ -1,26 +1,42 @@
 package com.example.msasbItem.controller;
 
 import com.example.msasbItem.dto.ItemDto;
+import com.example.msasbItem.service.AwsS3Service;
 import com.example.msasbItem.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/item")
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
+    private final AwsS3Service awsS3Service;
 
     // 아이템 등록
     @PostMapping
     public ResponseEntity<ItemDto> createItem(
-            @RequestHeader ("X-Auth-User") String email,
-            @RequestBody ItemDto itemDto) {
-        itemService.saveItem(email, itemDto);
+            @RequestHeader("Authorization") String token,
+            @RequestPart("itemDto") ItemDto itemDto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        // 이미지 업로드 후 URL 받기
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = awsS3Service.upload(image);
+            itemDto.setImageUrl(imageUrl); // 이미지 URL을 DTO에 저장
+        }
+
+        // 아이템 저장
+        itemService.saveItem(token, itemDto);
+
         return ResponseEntity.ok().body(itemDto);
     }
 

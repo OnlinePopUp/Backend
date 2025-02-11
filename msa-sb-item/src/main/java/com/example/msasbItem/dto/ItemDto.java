@@ -13,14 +13,18 @@ public class ItemDto {
     private Long amount;  // 재고 수량
     private Long price;   // 가격
     private String des;   // 설명
+    private String email;
+    private String imageUrl; // 이미지 경로
 
     @Builder
-    public ItemDto(Long itemId, Long popId, String name, Long amount, Long price, String des) {
+    public ItemDto(Long itemId, Long popId, String name, Long amount, Long price, String des, String email, String imageUrl) {
         this.itemId = itemId;
         this.popId = popId;
         this.name = name;
         this.amount = amount;
         this.price = price;
         this.des = des;
+        this.email = email;
+        this.imageUrl = imageUrl;
     }
 }

@@ -4,6 +4,7 @@ import com.example.msasbItem.dto.CartDto;
 import com.example.msasbItem.entity.CartEntity;
 import com.example.msasbItem.entity.ItemEntity;
 import com.example.msasbItem.entity.PopUpEntity;
+import com.example.msasbItem.jwt.JwtUtil;
 import com.example.msasbItem.repository.CartRepository;
 import com.example.msasbItem.repository.ItemRepository;
 import com.example.msasbItem.repository.PopUpRepository;
@@ -18,9 +19,10 @@ public class CartService {
     private final CartRepository cartRepository;
     private final PopUpRepository popUpRepository;
     private final ItemRepository itemRepository;
+    private final JwtUtil jwtUtil;
     
     // 장바구니에 아이템 추가
-    public void saveCartItem(String email, Long popId, Long itemId, CartDto cartDto) {
+    public void saveCartItem(String token, Long popId, Long itemId, CartDto cartDto) {
         PopUpEntity popUpEntity = popUpRepository.findById(popId)
                 .orElseThrow(() -> new RuntimeException("해당 popId에 해당하는 팝업스토어를 찾을 수 없습니다."));
 
@@ -30,6 +32,8 @@ public class CartService {
         if (!itemEntity.getPopId().equals(popId)) {
             throw new IllegalArgumentException("해당 아이템은 요청한 popId에 속하지 않습니다.");
         }
+
+        String email = jwtUtil.getEmail(token);
 
         // 장바구니에서 이미 존재하는 항목인지 확인
         CartEntity existingCartItem = cartRepository.findByEmailAndItemIdAndPopId(email, itemId, popId);
@@ -54,6 +58,7 @@ public class CartService {
                     .amount(cartDto.getAmount()) // 수량
                     .itemName(itemEntity.getName()) // 아이템 이름
                     .popId(popUpEntity.getPopId()) // 팝업 스토어 정보
+                    .imageUrl(itemEntity.getImageUrl()) // 이미지 URL 정보
                     .build();
 
             cartRepository.save(cartEntity);
@@ -61,7 +66,8 @@ public class CartService {
     }
 
     // 이메일을 이용하여 장바구니 조회
-    public List<CartDto> getCartItems(String email) {
+    public List<CartDto> getCartItems(String token) {
+        String email = jwtUtil.getEmail(token);
         List<CartEntity> cartEntities = cartRepository.findByEmail(email);
 
         // 엔티티 리스트를 DTO 리스트로 변환
@@ -74,12 +80,14 @@ public class CartService {
                         .price(cart.getPrice())
                         .popId(cart.getPopId())
                         .email(cart.getEmail())
+                        .imageUrl(cart.getImageUrl())
                         .build())
                 .toList();
     }
 
     // 장바구니 아이템 빼기
-    public void decreaseCartItem(String email, Long popId, Long itemId, Long decreaseAmount) {
+    public void decreaseCartItem(String token, Long popId, Long itemId, Long decreaseAmount) {
+        String email = jwtUtil.getEmail(token);
         CartEntity cartItem = cartRepository.findByEmailAndItemIdAndPopId(email, itemId, popId);
 
         // 현재 수량보다 많이 줄이려 하면 예외 처리

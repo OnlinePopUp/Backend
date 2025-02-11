@@ -22,14 +22,17 @@ public class ItemEntity {
     private Long price;
     private String des;
     private String email;
+    private String imageUrl;
 
     @Builder
-    public ItemEntity(Long popId, String name, Long amount, Long price, String des) {
+    public ItemEntity(Long popId, String name, Long amount, Long price, String des, String email, String imageUrl) {
         this.popId = popId;
         this.name = name;
         this.amount = amount;
         this.price = price;
         this.des = des;
+        this.email = email;
+        this.imageUrl = imageUrl;
     }
 }
 

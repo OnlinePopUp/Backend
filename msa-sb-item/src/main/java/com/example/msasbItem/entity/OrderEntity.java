@@ -22,10 +22,11 @@ public class OrderEntity {
     private String buyerPhone;
     private Long totalAmount;
     private String orderDate;
+    private String imageUrl;
 
     @Builder
     public OrderEntity(Long itemId, Long popId, String email,
-                       Long totalPrice, String buyerName, String buyerAddress, String buyerPhone, Long totalAmount, String orderDate) {
+                       Long totalPrice, String buyerName, String buyerAddress, String buyerPhone, Long totalAmount, String orderDate, String imageUrl) {
         this.itemId = itemId;
         this.popId = popId;
         this.email = email;
@@ -35,5 +36,6 @@ public class OrderEntity {
         this.buyerPhone = buyerPhone;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
+        this.imageUrl = imageUrl;
     }
 }

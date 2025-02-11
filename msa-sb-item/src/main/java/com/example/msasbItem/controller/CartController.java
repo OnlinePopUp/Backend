@@ -17,29 +17,29 @@ public class CartController {
     // 장바구니 아이템 담기
     @PostMapping("/{popId}/{itemId}")
     public ResponseEntity<CartDto> putCartItem(
-            @RequestHeader("X-Auth-User") String email,
+            @RequestHeader("Authorization") String token,
             @PathVariable Long popId,
             @PathVariable Long itemId,
             @RequestBody CartDto cartDto) {
-        cartService.saveCartItem(email, popId, itemId, cartDto);
+        cartService.saveCartItem(token, popId, itemId, cartDto);
         return ResponseEntity.ok().body(cartDto);
     }
 
     // 장바구니 조회
     @GetMapping
-    public ResponseEntity<List<CartDto>> getCartItems(@RequestHeader("X-Auth-User") String email) {
-        List<CartDto> cartItems = cartService.getCartItems(email);
+    public ResponseEntity<List<CartDto>> getCartItems(@RequestHeader("Authorization") String token) {
+        List<CartDto> cartItems = cartService.getCartItems(token);
         return ResponseEntity.ok(cartItems);
     }
 
     // 장바구니 아이템 빼기
     @PutMapping("/{popId}/{itemId}")
     public ResponseEntity<Void> decreaseCartItem(
-            @RequestHeader("X-Auth-User") String email,
+            @RequestHeader("Authorization") String token,
             @PathVariable Long popId,
             @PathVariable Long itemId,
             @RequestBody CartDto cartDto) {
-        cartService.decreaseCartItem(email, popId, itemId, cartDto.getAmount());
+        cartService.decreaseCartItem(token, popId, itemId, cartDto.getAmount());
         return ResponseEntity.ok().build();
     }
 }

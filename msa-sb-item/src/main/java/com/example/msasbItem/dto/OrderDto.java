@@ -20,10 +20,11 @@ public class OrderDto {
     private String buyerPhone;
     private Long totalAmount;
     private String orderDate;
+    private String imageUrl;
 
     @Builder
     public OrderDto(Long orderId, Long itemId, Long popId, String email,
-                       Long totalPrice, String buyerName, String buyerAddress, String buyerPhone, Long totalAmount, String orderDate) {
+                       Long totalPrice, String buyerName, String buyerAddress, String buyerPhone, Long totalAmount, String orderDate, String imageUrl) {
         this.orderId = orderId;
         this.itemId = itemId;
         this.popId = popId;
@@ -34,5 +35,6 @@ public class OrderDto {
         this.buyerPhone = buyerPhone;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
+        this.imageUrl = imageUrl;
     }
 }

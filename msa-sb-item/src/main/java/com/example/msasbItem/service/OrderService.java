@@ -7,6 +7,7 @@ import com.example.msasbItem.entity.CartEntity;
 import com.example.msasbItem.entity.ItemEntity;
 import com.example.msasbItem.entity.OrderEntity;
 import com.example.msasbItem.entity.PopUpEntity;
+import com.example.msasbItem.jwt.JwtUtil;
 import com.example.msasbItem.repository.CartRepository;
 import com.example.msasbItem.repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -24,9 +25,11 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
+    private final JwtUtil jwtUtil;
 
     // 주문 처리
-    public void orderItem(String email, OrderDto orderDto) {
+    public void orderItem(String token, OrderDto orderDto) {
+        String email = jwtUtil.getEmail(token);
         List<CartEntity> cartItems = cartRepository.findByEmail(email);
 
         if (cartItems.isEmpty()) {
@@ -49,6 +52,7 @@ public class OrderService {
                     .buyerPhone(orderDto.getBuyerPhone())
                     .totalAmount(cartItem.getAmount())
                     .orderDate(orderDto.getOrderDate())
+                    .imageUrl(orderDto.getImageUrl())
                     .build();
 
             orderRepository.save(orderEntity);
@@ -59,7 +63,8 @@ public class OrderService {
     }
 
     // 아이템 조회
-    public List<OrderDto> getOrderItems(String email) {
+    public List<OrderDto> getOrderItems(String token) {
+        String email = jwtUtil.getEmail(token);
         List<OrderEntity> orderEntities = orderRepository.findByEmail(email);
 
         return orderEntities.stream()
@@ -74,6 +79,7 @@ public class OrderService {
                         .buyerPhone(i.getBuyerPhone())
                         .totalAmount(i.getTotalAmount())
                         .orderDate(i.getOrderDate())
+                        .imageUrl(i.getImageUrl())
                         .build())
                 .toList();
     }
