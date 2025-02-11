@@ -30,7 +30,8 @@ public class SecurityConfig {
 
         http.authorizeExchange(auth -> auth
                 .pathMatchers("/auth/login","/auth/join", "/auth/reissue",
-                        "/post",
+                        "/post/**",
+                "/item/**", "/cart/**","/order/**",
                 "/comment").permitAll()
                 .pathMatchers("/user/admin").hasRole("ROLE_ADMIN")
                 .anyExchange().authenticated());

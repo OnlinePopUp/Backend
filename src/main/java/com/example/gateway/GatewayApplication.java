@@ -27,6 +27,12 @@ public class GatewayApplication {
                         r -> r.path("/post/**").uri("lb://post"))
                 .route("post",
                         r -> r.path("/comment/**").uri("lb://post"))
+                .route("msa-sb-item",
+                        r -> r.path("/item/**").uri("lb://msa-sb-item"))
+                .route("msa-sb-item",
+                        r -> r.path("/cart/**").uri("lb://msa-sb-item"))
+                .route("msa-sb-item",
+                        r -> r.path("/order/**").uri("lb://msa-sb-item"))
                 .build();
     }
 
