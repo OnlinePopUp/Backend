@@ -1,4 +1,4 @@
-# API 명세서 - AuthController
+# AuthController
 
 ## 1️⃣ 로그인 (Login)
 
