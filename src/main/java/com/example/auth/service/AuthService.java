@@ -28,7 +28,7 @@ public class AuthService {
 
         // 인증 안한 계정 (enabled = 0 일 시 로그인 실패 기능 추가)
 
-        if (user.getPassword().equals(bCryptPasswordEncoder.encode(password))) {
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             return ResponseEntity.badRequest().body("비밀번호 불일치");
         }
         String role = user.getRole();
@@ -107,5 +107,28 @@ public class AuthService {
 
         res.addHeader("AccessToken", accessToken);
         return ResponseEntity.ok("access token 재발급 성공");
+    }
+
+    public ResponseEntity<?> adminJoin(UserDto userDto) {
+        User nuser = userRepository.findById(userDto.getEmail()).orElse(null);
+
+        if(nuser != null)
+            return ResponseEntity.ok("이미 존재하는 ID입니다");
+
+
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(bCryptPasswordEncoder.encode(userDto.getPassword()))
+                .birth(userDto.getBirth())
+                .phone(userDto.getPhone())
+                .address(userDto.getAddress())
+                .nickname(userDto.getNickname())
+                .role("ROLE_ADMIN")
+                .point(0)
+                .enabled(0)
+                .build();
+
+        userRepository.save(user);
+        return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 }
