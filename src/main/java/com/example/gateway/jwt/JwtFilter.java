@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -29,6 +30,11 @@ public class JwtFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+
+        String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        if (contentType != null && contentType.startsWith("multipart/form-data")) {
+            return chain.filter(exchange); // 필터를 건너뛰고 다음 필터로 전달
+        }
 
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
 
