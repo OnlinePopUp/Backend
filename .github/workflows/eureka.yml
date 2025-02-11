@@ -42,23 +42,7 @@ jobs:
           mv ./build/libs/*SNAPSHOT.jar ./run.jar
           ls
 
-      # EC2에 JDK 17 설치 (자동화)
-      - name: EC2에 JDK 17 설치
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script_stop: true
-          script: |
-            if ! java -version 2>&1 | grep -q "17"; then
-              echo "JDK 17 not found. Installing..."
-              sudo apt update
-              sudo apt install -y openjdk-17-jdk
-            else
-              echo "JDK 17 is already installed."
-            fi
-            java -version
+      
 
       # EC2로 빌드된 JAR 파일 업로드
       - name: EC2에 jar파일 업로드
