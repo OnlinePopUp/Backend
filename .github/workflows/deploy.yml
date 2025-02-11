@@ -37,6 +37,7 @@ jobs:
       # RDS 세팅된 이후 진행
       - name: application.properties 동적 생성
         run: |
+          mkdir -p ./src/main/resources
           echo "${{secrets.APPLICATION_ITEM_CART_ORDER}}" > ./src/main/resources/application.properties
           ls ./src/main/resources/
 
