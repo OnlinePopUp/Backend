@@ -31,11 +31,6 @@ public class JwtFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
-        String contentType = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);  //없애라 나중에
-        if (contentType != null && contentType.startsWith("multipart/form-data")) {
-            return chain.filter(exchange); // 필터를 건너뛰고 다음 필터로 전달
-        }
-
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
 
         if(token == null) { // 로그인 안한 유저는 통과 -> permit all, authenticated로 걸러짐

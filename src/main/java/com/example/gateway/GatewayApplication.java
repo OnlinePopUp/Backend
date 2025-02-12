@@ -23,6 +23,10 @@ public class GatewayApplication {
                 // 서비스별 URL 별칭이 1개인 경우, n개인 경우도 존재
                 .route("auth",
                         r -> r.path("/auth/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/user/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/admin/**").uri("lb://auth"))
                 .route("post",
                         r -> r.path("/post/**").uri("lb://post"))
                 .route("post",
