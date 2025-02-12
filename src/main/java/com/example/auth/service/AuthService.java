@@ -40,7 +40,7 @@ public class AuthService {
 
         res.addCookie(creatCookie("refresh", refreshToken)); //리프레시는 쿠키로 전송
         res.addHeader("access-token", accessToken);
-        return ResponseEntity.ok().body("로그인 성공");
+        return ResponseEntity.ok(accessToken);
     }
 
     private Cookie creatCookie(String key, String value) {
