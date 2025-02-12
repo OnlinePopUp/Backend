@@ -136,6 +136,19 @@
 | **Response**    | **성공**: `200 OK`, `"신고가 완료되었습니다."` <br> **실패**: `400 Bad Request`, `"유효하지 않은 토큰"` |
 | **설명**        | `Authorization` 헤더의 **access token**을 이용하여 특정 사용자를 신고합니다. |
 
+---
+
+## 8️⃣ 포인트 충전 (Fill Point)
+
+| 항목             | 내용                                                   |
+|------------------|------------------------------------------------------|
+| **URL**         | `/user/fill/point`                                    |
+| **Method**      | `POST`                                               |
+| **Request 헤더** | `Authorization: Bearer {AccessToken}`                 |
+| **Request 파라미터** | `point` (long, 필수)                                |
+| **Response**    | **성공**: `200 OK`, `"포인트가 충전되었습니다"` <br> **실패**: `400 Bad Request`, `"유효하지 않은 토큰"` 또는 `"존재하지 않는 유저"` |
+| **설명**        | `Authorization` 헤더의 **access token**을 이용하여 사용자의 포인트를 충전합니다. |
+
 <br><br>
 
 # AdminController
