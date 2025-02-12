@@ -1,23 +1,27 @@
 package com.example.msasbItem.dto;
 
+import com.example.msasbItem.entity.StringListConverter;
+import jakarta.persistence.Convert;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class ItemDto {
     private Long itemId;
     private Long popId;
-    private String name;  // 아이템 이름
-    private Long amount;  // 재고 수량
-    private Long price;   // 가격
-    private String des;   // 설명
+    private String name;
+    private Long amount;
+    private Long price;
+    private String des;
     private String email;
-    private String imageUrl; // 이미지 경로
+    private List<String> imageUrls; // 여러 개의 이미지 저장
 
     @Builder
-    public ItemDto(Long itemId, Long popId, String name, Long amount, Long price, String des, String email, String imageUrl) {
+    public ItemDto(Long itemId, Long popId, String name, Long amount, Long price, String des, String email, List<String> imageUrls) {
         this.itemId = itemId;
         this.popId = popId;
         this.name = name;
@@ -25,6 +29,6 @@ public class ItemDto {
         this.price = price;
         this.des = des;
         this.email = email;
-        this.imageUrl = imageUrl;
+        this.imageUrls = imageUrls;
     }
 }

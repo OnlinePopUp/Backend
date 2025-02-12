@@ -1,10 +1,11 @@
 package com.example.msasbItem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name="cart")
@@ -20,6 +21,7 @@ public class CartEntity {
     private Long price;
     private Long amount;
     private String itemName;
+
     private String imageUrl;
 
     @Builder

@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
-    // 이메일을 기반으로 팝업 스토어 찾기
     List<ItemEntity> findByPopId(Long popId);
     ItemEntity findByPopIdAndItemId(Long popId, Long itemId);
+    List<ItemEntity> findListByPopIdAndItemId(Long popId, Long itemId);
 }

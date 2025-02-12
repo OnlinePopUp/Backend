@@ -35,8 +35,7 @@ public class CartService {
 
         String email = jwtUtil.getEmail(token);
 
-        // 장바구니에서 이미 존재하는 항목인지 확인
-        CartEntity existingCartItem = cartRepository.findByEmailAndItemIdAndPopId(email, itemId, popId);
+        CartEntity existingCartItem = cartRepository.findByEmailAndItemId(email, itemId);
 
         if (existingCartItem != null) {
             // 이미 장바구니에 존재하는 경우 → 수량 증가 + 가격 업데이트
@@ -51,6 +50,11 @@ public class CartService {
             // 장바구니에 존재하지 않는 경우 → 새로 추가
             Long totalPrice = itemEntity.getPrice() * cartDto.getAmount();
 
+            // 아이템의 첫번째 이미지만 가져오기 (대표 이미지)
+            String firstImageUrl = (itemEntity.getImageUrls() != null && !itemEntity.getImageUrls().isEmpty())
+                    ? itemEntity.getImageUrls().get(0)
+                    : null; // 이미지가 없으면 null
+
             CartEntity cartEntity = CartEntity.builder()
                     .itemId(itemEntity.getItemId()) // 아이템 ID
                     .email(email) // 장바구니 추가한 사용자 이메일
@@ -58,7 +62,7 @@ public class CartService {
                     .amount(cartDto.getAmount()) // 수량
                     .itemName(itemEntity.getName()) // 아이템 이름
                     .popId(popUpEntity.getPopId()) // 팝업 스토어 정보
-                    .imageUrl(itemEntity.getImageUrl()) // 이미지 URL 정보
+                    .imageUrl(firstImageUrl) // 첫번째 이미지 URL 정보
                     .build();
 
             cartRepository.save(cartEntity);
@@ -86,9 +90,9 @@ public class CartService {
     }
 
     // 장바구니 아이템 빼기
-    public void decreaseCartItem(String token, Long popId, Long itemId, Long decreaseAmount) {
+    public void decreaseCartItem(String token, Long itemId, Long decreaseAmount) {
         String email = jwtUtil.getEmail(token);
-        CartEntity cartItem = cartRepository.findByEmailAndItemIdAndPopId(email, itemId, popId);
+        CartEntity cartItem = cartRepository.findByEmailAndItemId(email, itemId);
 
         // 현재 수량보다 많이 줄이려 하면 예외 처리
         if (cartItem.getAmount() < decreaseAmount) {
@@ -102,7 +106,8 @@ public class CartService {
         if (newAmount == 0) {
             cartRepository.delete(cartItem);
         } else {
-            ItemEntity item = itemRepository.findByPopIdAndItemId(popId, itemId);
+            ItemEntity item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new RuntimeException("해당 itemId에 해당하는 아이템을 찾을 수 없습니다."));
 
             long itemUnitPrice = item.getPrice(); // 아이템 단가
             long newTotalPrice = itemUnitPrice * newAmount; // 새 총 가격 계산

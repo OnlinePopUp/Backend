@@ -33,13 +33,12 @@ public class CartController {
     }
 
     // 장바구니 아이템 빼기
-    @PutMapping("/{popId}/{itemId}")
+    @PutMapping("/{itemId}")
     public ResponseEntity<Void> decreaseCartItem(
             @RequestHeader("Authorization") String token,
-            @PathVariable Long popId,
             @PathVariable Long itemId,
             @RequestBody CartDto cartDto) {
-        cartService.decreaseCartItem(token, popId, itemId, cartDto.getAmount());
+        cartService.decreaseCartItem(token, itemId, cartDto.getAmount());
         return ResponseEntity.ok().build();
     }
 }

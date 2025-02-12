@@ -33,15 +33,12 @@ public class AwsS3Service {
     private String checkAndUpload(MultipartFile file) {
         // 원본 파일명 획득
         String originalFilename = file.getOriginalFilename();
-        System.out.println("originalFilename: " + originalFilename); // 체크용
         
         // .를 중심으로 확장자 획득
         String ext = originalFilename.substring(originalFilename.lastIndexOf(".")+1);
-        System.out.println("ext: " + ext); // 체크용
         
         // 이름+UUID로 구성하여 고유 값으로 파일명 구성
         String s3UploadName = UUID.randomUUID().toString().substring(0, 12) + "-" + originalFilename;
-        System.out.println("s3UploadName: " + s3UploadName); // 체크용
     
         String url = "";
         try {
