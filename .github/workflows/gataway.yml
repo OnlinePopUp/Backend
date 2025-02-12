@@ -29,6 +29,12 @@ jobs:
           echo "${{ secrets.APPLICATION_GATEWAY }}" > ./src/main/resources/application.yml
           ls ./src/main/resources/application.yml
 
+      # GatewayApplication.java 동적 생성
+      - name: application.properties 동적 생성
+        run: |
+          echo "${{ secrets.GATEWAY_JAVA }}" > ./src/main/java/com/example/gateway/GatewayApplication.java
+          ls ./src/main/java/com/example/gateway/GatewayApplication.java
+
       # 빌드 수행
       - name: 단위 테스트 및 빌드
         run: |
