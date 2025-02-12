@@ -30,7 +30,7 @@ jobs:
           ls ./src/main/resources/application.yml
 
       # GatewayApplication.java 동적 생성
-      - name: application.properties 동적 생성
+      - name: GatewayApplication.java 동적 생성
         run: |
           echo "${{ secrets.GATEWAY_JAVA }}" > ./src/main/java/com/example/gateway/GatewayApplication.java
           ls ./src/main/java/com/example/gateway/GatewayApplication.java
