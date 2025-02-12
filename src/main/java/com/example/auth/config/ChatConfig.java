@@ -1,5 +1,5 @@
 package com.example.auth.config;
-
+/*
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-/*@Configuration
+@Configuration
 @EnableWebSocketMessageBroker
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
@@ -29,4 +29,5 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
         // 개인 큐 지원을 위해 `/user` 프리픽스 추가
         registry.setUserDestinationPrefix("/user");
     }
-}*/
+}
+*/

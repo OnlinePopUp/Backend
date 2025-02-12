@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class AuthService {
 
         res.addCookie(creatCookie("refresh", refreshToken)); //리프레시는 쿠키로 전송
         res.addHeader("access-token", accessToken);
-        return ResponseEntity.ok(accessToken);
+        return ResponseEntity.ok("로그인 성공");
     }
 
     private Cookie creatCookie(String key, String value) {

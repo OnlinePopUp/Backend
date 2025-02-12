@@ -1,5 +1,5 @@
 package com.example.auth.service;
-
+/*
 import com.example.auth.dto.ChatDto;
 import com.example.auth.entity.Chat;
 import com.example.auth.entity.User;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -59,4 +59,5 @@ public class ChatService {
         }
         return ResponseEntity.ok(chatDtoList);
     }
-}*/
+}
+*/
