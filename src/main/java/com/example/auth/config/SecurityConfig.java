@@ -19,7 +19,7 @@ public class SecurityConfig {
     }
 
     // CORS 설정 추가
-    @Bean
+    /*@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // React 앱의 URL
@@ -32,10 +32,10 @@ public class SecurityConfig {
 
         return source;
     }
-
+*/
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        //http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http
                 .csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll() // 모든 요청을 허용
