@@ -5,10 +5,7 @@ import com.example.auth.service.AuthService;
 import com.example.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -25,5 +22,15 @@ public class AdminController {
     @GetMapping("/user/all")
     public ResponseEntity<?> getAllUsers(int size, int page) {
         return userService.getAllUsers(size, page);
+    }
+
+    @GetMapping("/report/all")
+    public ResponseEntity<?> getAllReports(int size, int page) {
+        return userService.getAllReports(size, page);
+    }
+
+    @GetMapping("/report/{reportId}")
+    public ResponseEntity<?> getReport(@PathVariable long reportId) {
+        return userService.getReport(reportId);
     }
 }

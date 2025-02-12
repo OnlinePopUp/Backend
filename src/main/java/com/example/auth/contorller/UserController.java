@@ -39,6 +39,8 @@ public class UserController {
         return userService.update(token,address,birth,phone,nickname);
     }
 
-    //@PostMapping("/report")
-    //public ResponseEntity<?>
+    @PostMapping("/report")
+    public ResponseEntity<?> report(@RequestHeader("Authorization") String token, String email, String content){
+        return userService.report(token, email, content);
+    }
 }

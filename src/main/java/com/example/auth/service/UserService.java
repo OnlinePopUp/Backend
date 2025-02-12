@@ -1,10 +1,13 @@
 package com.example.auth.service;
 
+import com.example.auth.dto.ReportDto;
 import com.example.auth.dto.UserDto;
 import com.example.auth.entity.Follow;
+import com.example.auth.entity.Report;
 import com.example.auth.entity.User;
 import com.example.auth.jwt.JwtUtil;
 import com.example.auth.repository.FollowRepository;
+import com.example.auth.repository.ReportRepository;
 import com.example.auth.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final FollowRepository followRepository;
+    private final ReportRepository reportRepository;
 
     public ResponseEntity<?> follow(String token, String flwEmail) {
 
@@ -156,5 +160,58 @@ public class UserService {
 
         userRepository.save(user);
         return ResponseEntity.ok("유저 정보 수정 완료");
+    }
+
+    public ResponseEntity<?> report(String token, String email, String content) {
+        String preEmail;
+        try{
+            preEmail = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지 않은 토큰");
+        }
+        Report report = new Report();
+        report.setIsCheck(0);
+        report.setContent(content);
+        report.setEmail(preEmail);
+        report.setRpEmail(email);
+
+        reportRepository.save(report);
+        return ResponseEntity.ok("신고가 완료되었습니다.");
+    }
+
+    public ResponseEntity<?> getAllReports(int size, int page) {
+        Sort sortById =Sort.by(Sort.Order.desc("reportId"));
+        Pageable pageable = PageRequest.of(page, size , sortById);
+        Page<Report> reports = reportRepository.findAll(pageable);
+
+        List<ReportDto> reportDtos = new ArrayList<>();
+        for(Report report : reports){
+            ReportDto reportDto = new ReportDto();
+            reportDto.setReportId(report.getReportId());
+            reportDto.setIsCheck(report.getIsCheck());
+            reportDto.setContent(report.getContent());
+            reportDto.setEmail(report.getEmail());
+            reportDto.setRpEmail(report.getRpEmail());
+            reportDtos.add(reportDto);
+        }
+        return ResponseEntity.ok(reportDtos);
+    }
+
+    public ResponseEntity<?> getReport(long reportId) {
+        Report report = reportRepository.findById(reportId).orElse(null);
+        if(report == null)
+            return ResponseEntity.badRequest().body("신고 내용이 없습니다.");
+
+        ReportDto reportDto = new ReportDto();
+        reportDto.setReportId(report.getReportId());
+        reportDto.setIsCheck(report.getIsCheck());
+        reportDto.setContent(report.getContent());
+        reportDto.setEmail(report.getEmail());
+        reportDto.setRpEmail(report.getRpEmail());
+
+        report.setIsCheck(1);
+        reportRepository.save(report);
+
+        return ResponseEntity.ok(reportDto);
     }
 }
