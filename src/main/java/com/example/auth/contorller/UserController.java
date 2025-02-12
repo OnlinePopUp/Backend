@@ -38,4 +38,7 @@ public class UserController {
                                         String address, String birth, String phone, String nickname) {
         return userService.update(token,address,birth,phone,nickname);
     }
+
+    //@PostMapping("/report")
+    //public ResponseEntity<?>
 }
