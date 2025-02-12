@@ -214,4 +214,20 @@ public class UserService {
 
         return ResponseEntity.ok(reportDto);
     }
+
+    public ResponseEntity<?> fillPoint(String token, long point) {
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지 않은 토큰");
+        }
+        User user = userRepository.findById(email).orElse(null);
+        if(user == null)
+            return ResponseEntity.badRequest().body("존재하지 않는 유저");
+
+        user.setPoint(point);
+        userRepository.save(user);
+        return ResponseEntity.ok("포인트가 충전되었습니다");
+    }
 }

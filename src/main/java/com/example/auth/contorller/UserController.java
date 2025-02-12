@@ -43,4 +43,9 @@ public class UserController {
     public ResponseEntity<?> report(@RequestHeader("Authorization") String token, String email, String content){
         return userService.report(token, email, content);
     }
+
+    @PostMapping("/fill/point")
+    public ResponseEntity<?> fillPoint(@RequestHeader("Authorization") String token, long point){
+        return userService.fillPoint(token,point);
+    }
 }
