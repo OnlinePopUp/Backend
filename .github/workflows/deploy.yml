@@ -20,7 +20,7 @@ jobs:
       - name: application.properties 동적 생성
         run: |
           mkdir -p ./src/main/resources
-          echo "${{secrets.APPLICATION_ITEM_CART_ORDER}}" > ./src/main/resources/application.properties
+          echo "${{secrets.APPLICATION_ITEM}}" > ./src/main/resources/application.properties
           ls ./src/main/resources/
 
       - name: 단위 테스트 및 빌드
@@ -39,7 +39,7 @@ jobs:
       - name: EC2에 jar 업로드
         uses: appleboy/scp-action@v0.1.7
         with:
-            host: ${{ secrets.EC2_HOST_ITEM_CART_ORDER }}
+            host: ${{ secrets.EC2_HOST_ITEM }}
             username: ${{ secrets.EC2_USER_ITEM_CART_ORDER }}
             key: ${{ secrets.EC2_KEY_ITEM_CART_ORDER }}
             source: run.jar
@@ -48,7 +48,7 @@ jobs:
       - name: SSH로 EC2에 접속하고 정리 후, 서버 가동
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.EC2_HOST_ITEM_CART_ORDER }}
+          host: ${{ secrets.EC2_HOST_ITEM }}
           username: ${{ secrets.EC2_USER_ITEM_CART_ORDER }}
           key: ${{ secrets.EC2_KEY_ITEM_CART_ORDER }}
           script_stop: true
