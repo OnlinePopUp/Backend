@@ -14,7 +14,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // stomp 접속 주소 url = ws://ip/ws, 프로토콜이 http가 아님
         registry.addEndpoint("/ws") // 연결될 엔드포인트
-                .setAllowedOrigins("http://localhost:3000")
+                .setAllowedOrigins("*")
                 .withSockJS();
     }
 
