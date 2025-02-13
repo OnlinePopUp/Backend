@@ -1,0 +1,62 @@
+name: Deploy for ci/cd
+on:
+  push:
+    branches:
+      - order
+
+jobs:
+  cicd-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github Repository 내 파일들 checkout(불러오기) 수행
+        uses: actions/checkout@v4
+
+      - name: JDK 17 버전 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+
+      - name: application.properties 동적 생성
+        run: |
+          mkdir -p ./src/main/resources
+          echo "${{secrets.APPLICATION_ORDER}}" > ./src/main/resources/application.properties
+          ls ./src/main/resources/
+
+      - name: 단위 테스트 및 빌드
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build
+          pwd
+          ls
+          ls ./build/libs
+
+      - name: 관리상 빌드된 결과물의 이름을 변경 처리
+        run: |
+          mv ./build/libs/*SNAPSHOT.jar ./run.jar
+          ls
+
+      - name: EC2에 jar 업로드
+        uses: appleboy/scp-action@v0.1.7
+        with:
+            host: ${{ secrets.EC2_HOST_ORDER }}
+            username: ${{ secrets.EC2_USER_ITEM_CART_ORDER }}
+            key: ${{ secrets.EC2_KEY_ITEM_CART_ORDER }}
+            source: run.jar
+            target: /home/ubuntu/server/demo
+
+      - name: SSH로 EC2에 접속하고 정리 후, 서버 가동
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST_ORDER }}
+          username: ${{ secrets.EC2_USER_ITEM_CART_ORDER }}
+          key: ${{ secrets.EC2_KEY_ITEM_CART_ORDER }}
+          script_stop: true
+          script: |
+            rm -rf /home/ubuntu/server/web
+            mkdir /home/ubuntu/server/web
+            mv /home/ubuntu/server/demo/run.jar /home/ubuntu/server/web/run.jar
+            cd /home/ubuntu/server/web
+            sudo fuser -k -n tcp 8080 || true
+            nohup java -jar run.jar > ./output.log 2>&1 &
+            rm -rf /home/ubuntu/server/demo
