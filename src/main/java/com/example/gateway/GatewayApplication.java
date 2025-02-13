@@ -32,12 +32,12 @@ public class GatewayApplication {
                         r -> r.path("/admin/**").uri("lb://auth"))
                 .route("auth",
                         r -> r.path("/chat/**").uri("lb://auth"))
-                .route("auth",
+                /*.route("auth",
                         r -> r.path("/ws/**").uri("lb://auth"))
                 .route("auth",
                         r -> r.path("/pub/**").uri("lb://auth"))
                 .route("auth",
-                        r -> r.path("/sub/**").uri("lb://auth"))
+                        r -> r.path("/sub/**").uri("lb://auth"))*/
 
                 .route("post",
                         r -> r.path("/post/**").uri("lb://post"))
