@@ -1,5 +1,5 @@
 package com.example.auth.contorller;
-/*
+
 import com.example.auth.dto.ChatDto;
 import com.example.auth.entity.Chat;
 import com.example.auth.repository.ChatRepository;
@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ChatController {
     private final ChatService chatService;
-    // 메세지 송신 및 수신
-    @MessageMapping("/chat")
+
+    // 메세지 송신
+    @MessageMapping("/chat") // pup/chat
     public void sendMessage(@Payload ChatDto chatDto) {
+        String rEmail = chatDto.getREmail();
         System.out.println(chatDto);
         chatService.sendMessage(chatDto.getSEmail(), chatDto.getREmail(), chatDto.getContent());
     }
@@ -29,5 +32,5 @@ public class ChatController {
         return chatService.getChatHistory(sEmail,rEmail);
     }
 }
-*/
+
 

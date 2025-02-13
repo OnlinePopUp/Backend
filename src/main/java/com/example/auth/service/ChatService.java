@@ -1,5 +1,5 @@
 package com.example.auth.service;
-/*
+
 import com.example.auth.dto.ChatDto;
 import com.example.auth.entity.Chat;
 import com.example.auth.entity.User;
@@ -34,7 +34,7 @@ public class ChatService {
         chat.setContent(content);
 
         chatRepository.save(chat);
-        messagingTemplate.convertAndSendToUser(rEmail,"/queue/messages", chat);
+        messagingTemplate.convertAndSend("/sub/" + rEmail, chat); // 수신자 이메일에 전송
     }
 
     public ResponseEntity<?> getChatHistory(String sEmail, String rEmail) {
@@ -60,4 +60,3 @@ public class ChatService {
         return ResponseEntity.ok(chatDtoList);
     }
 }
-*/
