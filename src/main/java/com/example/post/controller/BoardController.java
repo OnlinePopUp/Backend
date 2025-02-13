@@ -19,7 +19,7 @@ public class BoardController {
     @PostMapping("/write") //게시글 작성
     public ResponseEntity<?> write(@RequestHeader("Authorization") String token,
             String name, String content, List<MultipartFile> files) throws IOException {
-        return boardService.write(name, content, token,files);
+        return boardService.write(token,name, content,files);
     }
 
     @GetMapping("/all") //게시글 전체 조회

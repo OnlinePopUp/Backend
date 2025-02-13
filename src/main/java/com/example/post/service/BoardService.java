@@ -40,8 +40,9 @@ public class BoardService {
         try{
             email = jwtUtil.getEmail(token);
         }catch (Exception e){
-            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+            return ResponseEntity.badRequest().body("유효하지 않은 토큰");
         }
+
         Board board = new Board();
         board.setName(name);
         board.setContent(content);
