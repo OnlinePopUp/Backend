@@ -21,7 +21,6 @@ public class GatewayApplication {
 
     @Bean
     public RouteLocator ecomRouteLocator(RouteLocatorBuilder builder) {
-        System.out.println("게이트웨이에서 개별 서비스 URL 등록");
         return builder.routes()
                 // 개별 라우트 등록
                 // 서비스별 URL 별칭이 1개인 경우, n개인 경우도 존재
@@ -31,6 +30,16 @@ public class GatewayApplication {
                         r -> r.path("/user/**").uri("lb://auth"))
                 .route("auth",
                         r -> r.path("/admin/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/chat/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/ws/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/pub/**").uri("lb://auth"))
+                .route("auth",
+                        r -> r.path("/sub/**").uri("lb://auth"))
+
+
                 .route("post",
                         r -> r.path("/post/**").uri("lb://post"))
                 .route("post",

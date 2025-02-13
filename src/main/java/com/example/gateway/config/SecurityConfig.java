@@ -32,6 +32,7 @@ public class SecurityConfig {
         configuration.addExposedHeader("access-token");
 
         configuration.setAllowCredentials(true); // 쿠키 인증 허용
+        //configuration.addExposedHeader("Set-Cookie");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -53,7 +54,9 @@ public class SecurityConfig {
                         "/post/**",
                 "/item/**", "/cart/**","/order/**",
                 "/comment/**",
-                        "/user/**","/admin/**").permitAll()
+                        "/user/**","/admin/**",
+                        "/ws/**","/chat/**","/pub/**","/sub/**"
+                ).permitAll()
                 .pathMatchers("/user/admin").hasRole("ROLE_ADMIN")
                 .anyExchange().authenticated());
 
