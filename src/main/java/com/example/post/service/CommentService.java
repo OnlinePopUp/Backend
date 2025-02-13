@@ -22,7 +22,14 @@ public class CommentService {
     private final CommentHeartRepository commentHeartRepository;
     private final JwtUtil jwtUtil;
 
-    public ResponseEntity<?> write(String content, String email, long boardId) {
+    public ResponseEntity<?> write(String token,String content, long boardId) {
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
+
          Board board = boardRepository.findById(boardId).orElse(null);
 
          if(board == null)
@@ -82,7 +89,14 @@ public class CommentService {
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 
-    public ResponseEntity<?> like(long cmtId, String email) {
+    public ResponseEntity<?> like(String token,long cmtId) {
+
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
 
         Comment comment = commentRepository.findById(cmtId).orElse(null);
         if(comment == null)
@@ -106,12 +120,19 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteLike(long cmtId, String email) {
+    public ResponseEntity<?> deleteLike(String token, long cmtId) {
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
+
         Comment comment = commentRepository.findById(cmtId).orElse(null);
         if(comment == null)
             return ResponseEntity.badRequest().body("존재하지 않는 댓글입니다.");
 
-        Optional<CommentHeart> commentHeart = commentHeartRepository.findById(cmtId);
+        Optional<CommentHeart> commentHeart = commentHeartRepository.findByCmtIdAndEmail(cmtId,email);
 
         if(!commentHeart.isPresent())
             return ResponseEntity.badRequest().body("좋아요 하신 상태가 아닙니다.");

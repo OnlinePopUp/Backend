@@ -17,9 +17,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/write") //게시글 작성
-    public ResponseEntity<?> write(String name, String content, String email,
-                                   List<MultipartFile> files) throws IOException {
-        return boardService.write(name, content, email,files);
+    public ResponseEntity<?> write(@RequestHeader("Authorization") String token,
+            String name, String content, List<MultipartFile> files) throws IOException {
+        return boardService.write(name, content, token,files);
     }
 
     @GetMapping("/all") //게시글 전체 조회
@@ -37,24 +37,24 @@ public class BoardController {
         return boardService.search(category,keyword, size, page);
     }
 
-    @PostMapping("/update/{boardId}") // 게시글 수정, 추후 jwt와 연동 후 email로 확인 작업 추가
+    @PostMapping("/update/{boardId}") // 게시글 수정
     public ResponseEntity<?> update(@RequestHeader("Authorization") String token,@PathVariable long boardId,String content) {
         return boardService.update(token,boardId,content);
     }
 
-    @PostMapping("/delete/{boardId}") // 게시글 삭제, 추후 jwt와 연동 후 email로 확인 작업 추가
+    @PostMapping("/delete/{boardId}") // 게시글 삭제,
     public ResponseEntity<?> delete(@RequestHeader("Authorization") String token,@PathVariable long boardId) {
         return boardService.delete(token,boardId);
     }
 
     @PostMapping("/like/{boardId}")
-    public ResponseEntity<?> like(@PathVariable long boardId, String email) {
-        return boardService.like(boardId, email);
+    public ResponseEntity<?> like(@RequestHeader("Authorization") String token,@PathVariable long boardId) {
+        return boardService.like(token,boardId);
     }
 
-    @PostMapping("/deletelike/{boardId}")
-    public ResponseEntity<?> deleteLike(@PathVariable long boardId, String email) {
-        return boardService.deleteLike(boardId,email);
+    @PostMapping("/delete/like/{boardId}")
+    public ResponseEntity<?> deleteLike(@RequestHeader("Authorization") String token,@PathVariable long boardId) {
+        return boardService.deleteLike(token,boardId);
     }
 
 }

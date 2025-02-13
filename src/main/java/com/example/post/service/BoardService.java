@@ -34,8 +34,14 @@ public class BoardService {
     private final JwtUtil jwtUtil;
     private final AwsS3Service awsS3Service;
 
-    public ResponseEntity<?> write(String name, String content, String email,
+    public ResponseEntity<?> write(String token,String name, String content,
                                     List<MultipartFile> files) throws IOException {
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
         Board board = new Board();
         board.setName(name);
         board.setContent(content);
@@ -235,7 +241,14 @@ public class BoardService {
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
-    public ResponseEntity<?> like(long boardId, String email) {
+    public ResponseEntity<?> like(String token,long boardId) {
+
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
 
         Optional<BoardHeart> boardHeart = boardHeartRepository.findByBoardIdAndEmail(boardId,email);
 
@@ -255,7 +268,15 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteLike(long boardId, String email) {
+    public ResponseEntity<?> deleteLike(String token,long boardId) {
+
+        String email;
+        try{
+            email = jwtUtil.getEmail(token);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("유효하지않은 토큰");
+        }
+
         Optional<BoardHeart> boardHeart = boardHeartRepository.findByBoardIdAndEmail(boardId,email);
 
         if(!boardHeart.isPresent())

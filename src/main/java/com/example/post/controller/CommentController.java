@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
     @PostMapping("/write")
-    public ResponseEntity<?> write(String content, String email, long boardId) {
-        return commentService.write(content,email,boardId);
+    public ResponseEntity<?> write(@RequestHeader("Authorization") String token,String content, long boardId) {
+        return commentService.write(token,content,boardId);
     }
     // 업데이트 딜리트 좋아요 좋취
 
@@ -27,13 +27,13 @@ public class CommentController {
     }
 
     @PostMapping("/like/{cmtId}")
-    public ResponseEntity<?> like(@PathVariable long cmtId, String email) {
-        return commentService.like(cmtId,email);
+    public ResponseEntity<?> like(@RequestHeader("Authorization") String token,@PathVariable long cmtId) {
+        return commentService.like(token,cmtId);
     }
 
-    @PostMapping("/deletelike/{cmtId}")
-    public ResponseEntity<?> deleteLike(@PathVariable long cmtId, String email) {
-        return commentService.deleteLike(cmtId,email);
+    @PostMapping("/delete/like/{cmtId}")
+    public ResponseEntity<?> deleteLike(@RequestHeader("Authorization") String token,@PathVariable long cmtId) {
+        return commentService.deleteLike(token,cmtId);
     }
 
 }
