@@ -20,7 +20,7 @@ public class ChatController {
     private final ChatService chatService;
 
     // 메세지 송신
-    @MessageMapping("/chat") // pup/chat
+    @MessageMapping("/send") // /chat/pub/send
     public void sendMessage(@Payload ChatDto chatDto) {
         String rEmail = chatDto.getREmail();
         System.out.println(chatDto);
