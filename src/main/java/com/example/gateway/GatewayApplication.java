@@ -39,12 +39,10 @@ public class GatewayApplication {
                 .route("auth",
                         r -> r.path("/sub/**").uri("lb://auth"))
 
-
                 .route("post",
                         r -> r.path("/post/**").uri("lb://post"))
                 .route("post",
                         r -> r.path("/comment/**").uri("lb://post"))
-
 
                 .route("msa-sb-item",
                         r -> r.path("/item/**").uri(itemUrl)) // 다른 리전이라 퍼블릭 ip로 라우팅
