@@ -1,10 +1,5 @@
 HELP.md
 src/main/resources/application.yml
-src/main/java/com/example/auth/config/ChatConfig.java
-src/main/java/com/example/auth/contorller/ChatController.java
-src/main/java/com/example/auth/entity/Chat.java
-src/main/java/com/example/auth/repository/ChatRepository.java
-src/main/java/com/example/auth/service/ChatService.java
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
