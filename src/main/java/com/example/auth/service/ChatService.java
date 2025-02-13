@@ -34,7 +34,7 @@ public class ChatService {
         chat.setContent(content);
 
         chatRepository.save(chat);
-        messagingTemplate.convertAndSend("/sub/" + rEmail, chat); // 수신자 이메일에 전송
+        messagingTemplate.convertAndSend("/chat/sub/" + rEmail, chat); // 수신자 이메일에 전송
     }
 
     public ResponseEntity<?> getChatHistory(String sEmail, String rEmail) {
