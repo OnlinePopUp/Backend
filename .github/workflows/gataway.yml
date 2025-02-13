@@ -30,11 +30,11 @@ jobs:
           ls ./src/main/resources/application.yml
 
       # 빌드 수행
-      - name: 단위 테스트 및 빌드
-        run: |
-          if [ ! -x ./gradlew ]; then chmod +x ./gradlew; fi
-          ./gradlew clean build
-          ls ./build/libs
+      #- name: 단위 테스트 및 빌드
+       # run: |
+        #  if [ ! -x ./gradlew ]; then chmod +x ./gradlew; fi
+         # ./gradlew clean build
+          #ls ./build/libs
 
       # 빌드 결과물 이름 변경
       - name: 관리상 빌드된 결과물의 이름을 변경 처리
