@@ -3,7 +3,7 @@ name: Spring CI/CD - Popup
 on:
   push:
     branches:
-      - popup
+      - pop-up
 
 jobs:
   cicd-deploy:
