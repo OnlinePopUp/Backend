@@ -71,15 +71,38 @@
 | `/comment/like/{cmtId}`  | `POST`    | 특정 댓글에 좋아요를 추가합니다. 이미 좋아요를 누른 상태라면 실패 응답을 반환합니다.                            | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"이미 좋아요 하신 상태입니다."` |
 | `/comment/delete/like/{cmtId}` | `POST` | 특정 댓글의 좋아요를 취소합니다. 좋아요를 누르지 않은 댓글에 대해 취소를 시도하면 실패 응답을 반환합니다. | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요 취소"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"좋아요 하신 상태가 아닙니다."`               |
 
-# ItemController
+# ItemController API
 
 | **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
 |------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/item`  | `POST`    | 팝업 아이템 등록, 팝업을 만들지 않았으면 오류 반환 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`)) | **성공**: `200 OK`: `itemDto반환`<br>**실패**: `400 Bad Request`: `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."` |
-| `/item/{itemId}`    | `PUT`    | 팝업 아이템 수정 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`))  |**성공**: `200 OK`: `itemDto반환`<br>**실패**: `400 Bad Request`: `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
-| `/item/{popId}`    | `GET`    | 선택한 팝업의 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`: `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`: `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
-| `/item`  | `GET`    | 전체 팝업 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`: `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`: `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
-| `/item/search?keyword=아이템이름 or 아이템설명` | `GET`    | 검색을 통한 팝업 아이템 조회 |`keyword` (Request Param)  |**성공**: `200 OK`: `List반환 [{json}, {json}, ...]` |
-| `/item/{itemId}`  | `DELETE`    | 팝업 아이템 삭제 |`itemId` (pathVariable)  |**성공**: `204 No Content`<br>**실패**:`400 Bad Request`: `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
+| `/item`  | `POST`    | 팝업 아이템 등록, 팝업을 만들지 않았으면 오류 반환 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`)) | **성공**: `200 OK`, `itemDto반환`<br>**실패**: `400 Bad Request`, `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."` |
+| `/item/{itemId}`    | `PUT`    | 팝업 아이템 수정 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`))  |**성공**: `200 OK`, `itemDto반환`<br>**실패**: `400 Bad Request`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
+| `/item/{popId}`    | `GET`    | 선택한 팝업의 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`, `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
+| `/item`  | `GET`    | 전체 팝업 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`, `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
+| `/item/search?keyword=아이템이름 or 아이템설명` | `GET`    | 검색을 통한 팝업 아이템 조회 |`keyword` (requestParam)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` |
+| `/item/{itemId}`  | `DELETE`    | 팝업 아이템 삭제 |`itemId` (pathVariable)  |**성공**: `204 No Content`<br>**실패**:`400 Bad Request`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
+
+
+<br><br>
+
+# CartController API
+
+| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
+|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
+| `/cart/{popId}/{itemId}`  | `POST`    | 장바구니에 팝업 아이템 담기 |`popId` (pathVariable), `itemId` (pathVariable), `amount` (json) {"amount":수량} | **성공**: `200 OK`, `amount반환`<br>**실패**: `400 Bad Request`, `"해당 popId에 해당하는 팝업스토어를 찾을 수 없습니다."`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."` |
+| `/cart`    | `GET`    | 장바구니 조회 | 헤더의 `Authorization`으로 조회 |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`|
+| `/cart/{itemId}`    | `PUT`    | 장바구니의 팝업 아이템 빼기 |`itemId` (pathVariable), `amount` (json) {"amount":수량} |**성공**: `200 OK` <br>**실패**: `400 Bad Request`, `"현재 수량보다 많은 수량을 뺄 수 없습니다."`  |
+
+
+<br><br>
+
+# OrderController API
+
+| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
+|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
+| `/order`  | `POST`    | 장바구니의 아이템들 주문하기 |`orderDto` (json) {"buyName": "주문자성함","buyerAddress": 배송지,"buyerPhone": 구매자폰번호}  | **성공**: `200 OK`, `orderDto반환`<br>**실패**: `400 Bad Request`, `"장바구니가 비어있어 주문할 수 없습니다."`, `"구매자의 잔액이 부족합니다."`, `"상품의 재고가 부족합니다."` |
+| `/order/payment`    | `GET`    | 결제 정보 조회(최근 주문 일자 순) | 헤더의 `Authorization`으로 조회 |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`|
+| `/order/payment/{paymentId}`    | `GET`    | 결제 상세 정보(주문 정보) |`paymentId` (pathVariable) |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` <br>**실패**: `400 Bad Request`, `"해당 email의 주문을 찾을 수 없습니다.: " + email + "해당 paymentId의 주문을 찾을 수 없습니다.: " + paymentId`  |
+
 
 <br><br>
