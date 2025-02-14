@@ -71,3 +71,11 @@
 | `/comment/like/{cmtId}`  | `POST`    | 특정 댓글에 좋아요를 추가합니다. 이미 좋아요를 누른 상태라면 실패 응답을 반환합니다.                            | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"이미 좋아요 하신 상태입니다."` |
 | `/comment/delete/like/{cmtId}` | `POST` | 특정 댓글의 좋아요를 취소합니다. 좋아요를 누르지 않은 댓글에 대해 취소를 시도하면 실패 응답을 반환합니다. | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요 취소"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"좋아요 하신 상태가 아닙니다."`               |
 
+# ItemController
+
+| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
+|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
+| `/item`    | `POST`    | 팝업 아이템 등록           |`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` (List<MultipartFile>),  | `200 OK`: `"itemDto반환"`, 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> `400 Bad Request`: `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."`  |
+
+
+<br><br>
