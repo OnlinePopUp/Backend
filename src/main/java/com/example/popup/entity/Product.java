@@ -14,16 +14,13 @@ import java.math.BigDecimal;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    // PopupStore와의 관계: Many-to-One
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "popup_store_id")
-    private PopupStore popupStore;
+    private Long productId;  // 상품 고유 식별자
 
     private String productName;
     private String productDescription;
     private BigDecimal price;
-    private int inventory;
-    private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "popup_id")
+    private PopupStore popupStore;
 }
