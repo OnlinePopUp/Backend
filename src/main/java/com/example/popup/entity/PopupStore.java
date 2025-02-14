@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,26 +15,20 @@ import java.util.List;
 public class PopupStore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long popupID;  // 팝업스토어 고유 식별자
+    private Long pop_id;  // 팝업스토어 고유 식별자
 
     @Column(unique = true, nullable = false)
     private String email;  // 소유자 이메일
 
-    private String title;   // 스토어 이름
-    private String content; // 소개글
+    private String title;    // 스토어 이름
+    private String content;  // 소개글
     private LocalDateTime start; // 판매 시작 시간
-    private LocalDateTime end;   // 판매 종료 시간
+    private LocalDateTime exp;   // 판매 종료 시간
     private Integer offline; // 오프라인 여부
     private String address;  // 오프라인 주소
-    private String category; // 종류
-    private String image;    // 썸네일
+    private String category; // 스토어 종류
+    private String image;    // 썸네일 이미지 URL
 
-
-    @OneToMany(mappedBy = "popupStore", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Product> products = new ArrayList<>();
-
-    // 팝업스토어 개설 시 문자열로 받은 날짜를 LocalDateTime으로 변환하는 유틸리티
     public static LocalDateTime parseDateTime(String dateTimeStr) {
         return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_DATE_TIME);
     }
