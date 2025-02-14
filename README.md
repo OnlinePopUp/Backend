@@ -17,7 +17,6 @@
 | `/user/delete/follow` | `POST` | 특정 사용자의 팔로우 해제 | `Authorization: Bearer {AccessToken}`, `flwEmail` (String) | `200 OK`: `"언팔로우 되었습니다"` <br> `400 Bad Request`: `"팔로우 하지 않은 상태"` 또는 `"유효하지 않은 토큰"` |
 | `/user/follow/all` | `GET` | 특정 사용자의 팔로워 및 팔로잉 목록 조회 | `email` (String) | `200 OK`: `{ "flwerList": [...], "flwerCnt": n, "flwerNick": [...], "flwingList": [...], "flwingCnt": n, "flwingNick": [...] }` |
 | `/user/delete`  | `POST`    | 회원 탈퇴 | `Authorization: Bearer {AccessToken}`, `email` (String) | `200 OK`: `"탈퇴되었습니다."` <br> `400 Bad Request`: `"존재하지 않는 유저"` 또는 `"관리자 혹은 자신만 탈퇴 가능"` 또는 `"유효하지 않은 토큰"` |
-| `/user/all`  | `GET` | 모든 유저 목록 조회 (페이지네이션) | `size` (int), `page` (int) | `200 OK`: `[{ "email": "...", "nickname": "...", "address": "...", "phone": "...", "birth": "..." }, ...]` |
 | `/user/update`  | `POST`    | 유저 정보 수정 | `Authorization: Bearer {AccessToken}`, `address` (String, 선택), `birth` (String, 선택), `phone` (String, 선택), `nickname` (String, 선택) | `200 OK`: `"유저 정보 수정 완료"` <br> `400 Bad Request`: `"존재하지 않는 유저"` 또는 `"유효하지 않은 토큰"` |
 | `/user/report` | `POST` | 특정 사용자를 신고 | `Authorization: Bearer {AccessToken}`, `email` (String, 필수), `content` (String, 필수) | `200 OK`: `"신고가 완료되었습니다."` <br> `400 Bad Request`: `"유효하지 않은 토큰"` |
 | `/user/fill/point` | `POST` | 포인트 충전 | `Authorization: Bearer {AccessToken}`, `point` (long, 필수) | `200 OK`: `"포인트가 충전되었습니다"` <br> `400 Bad Request`: `"유효하지 않은 토큰"` 또는 `"존재하지 않는 유저"` |
