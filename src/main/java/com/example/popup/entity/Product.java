@@ -16,9 +16,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;  // 상품 고유 식별자
 
-    private String productName;
-    private String productDescription;
-    private BigDecimal price;
+    private String productName;         // 상품 이름
+    private String productDescription;  // 상품 설명
+    private BigDecimal price;           // 상품 가격
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "popup_id")
