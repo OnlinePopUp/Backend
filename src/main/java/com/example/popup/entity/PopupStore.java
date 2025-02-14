@@ -19,11 +19,18 @@ public class PopupStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long popupID;  // 팝업스토어 고유 식별자
 
+    @Column(unique = true, nullable = false)
     private String email;  // 소유자 이메일
-    private String user;   // 스토어 이름
 
-    private LocalDateTime saleStart; // 판매 시작 시간
-    private LocalDateTime saleEnd;   // 판매 종료 시간
+    private String title;   // 스토어 이름
+    private String content; // 소개글
+    private LocalDateTime start; // 판매 시작 시간
+    private LocalDateTime end;   // 판매 종료 시간
+    private Integer offline; // 오프라인 여부
+    private String address;  // 오프라인 주소
+    private String category; // 종류
+    private String image;    // 썸네일
+
 
     @OneToMany(mappedBy = "popupStore", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
