@@ -75,7 +75,11 @@
 
 | **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
 |------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/item`    | `POST`    | 팝업 아이템 등록           |`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` (List<MultipartFile>),  | `200 OK`: `"itemDto반환"`, 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> `400 Bad Request`: `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."`  |
-
+| `/item`  | `POST`    | 팝업 아이템 등록, 팝업을 만들지 않았으면 오류 반환 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`)) | `200 OK`: `itemDto반환`,  `400 Bad Request`: `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."` |
+| `/item/{itemId}`    | `PUT`    | 팝업 아이템 수정 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`))  | `200 OK`: `itemDto반환`,  `400 Bad Request`: `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
+| `/item/{popId}`    | `GET`    | 선택한 팝업의 아이템 조회 |`popId` (pathVariable)  | `200 OK`: `List반환 [{json}, {json}, ...]`,  `400 Bad Request`: `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
+| `/item`  | `GET`    | 전체 팝업 아이템 조회 |`popId` (pathVariable)  |  `200 OK`: `List반환 [{json}, {json}, ...]`  `400 Bad Request`: `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
+| `/item/search?keyword=아이템이름 or 아이템설명` | `GET`    | 검색을 통한 팝업 아이템 조회 |`keyword` (Request Param)  |  `200 OK`: `List반환 [{json}, {json}, ...]` |
+| `/item/{itemId}`  | `DELETE`    | 팝업 아이템 삭제 |`itemId` (pathVariable)  |  `204 No Content`,  `400 Bad Request`: `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
 
 <br><br>
