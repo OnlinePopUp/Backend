@@ -55,7 +55,7 @@ public class SecurityConfig {
                 "/item/**", "/cart/**","/order/**",
                 "/comment/**",
                         "/user/**","/admin/**",
-                        "/chat/**"
+                        "/chat/**", "/popup/**"
                 ).permitAll()
                 .pathMatchers("/user/admin").hasRole("ROLE_ADMIN")
                 .anyExchange().authenticated());
