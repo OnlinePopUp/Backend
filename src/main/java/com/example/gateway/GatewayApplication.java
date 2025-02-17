@@ -45,6 +45,9 @@ public class GatewayApplication {
                 .route("post",
                         r -> r.path("/comment/**").uri("lb://post"))
 
+                .route("popup",
+                        r -> r.path("/popup/**").uri("lb://popup"))
+
 
                 .route("item",
                         r -> r.path("/item/**").uri(itemUrl)) // 다른 리전이라 퍼블릭 ip로 라우팅
