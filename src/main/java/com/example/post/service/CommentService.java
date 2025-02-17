@@ -137,7 +137,7 @@ public class CommentService {
         if(!commentHeart.isPresent())
             return ResponseEntity.badRequest().body("좋아요 하신 상태가 아닙니다.");
 
-        commentHeartRepository.deleteById(cmtId);
+        commentHeartRepository.delete(commentHeart.get());
 
         comment.setHeart(comment.getHeart() - 1);
         commentRepository.save(comment);
