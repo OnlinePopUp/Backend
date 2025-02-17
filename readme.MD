@@ -40,15 +40,15 @@
 
 # PopupDto 명세표
 
-| 필드명    | 타입    | 설명                  | 예시 값 |
-|----------|--------|----------------------|---------|
-| `popId`  | `long`   | 팝업스토어 고유 ID    | `1` |
-| `title`  | `String` | 팝업스토어 제목       | `"봄맞이 핸드메이드 마켓"` |
-| `email`  | `String` | 등록한 사용자 이메일 | `"user@example.com"` |
-| `content` | `String` | 팝업스토어 설명      | `"핸드메이드 제품을 판매하는 팝업스토어"` |
-| `start`  | `String` | 시작 날짜 (yyyy-MM-dd) | `"2025-03-01"` |
-| `exp`    | `String` | 종료 날짜 (yyyy-MM-dd) | `"2025-03-07"` |
-| `offline` | `String` | 오프라인 여부 (`Y` / `N`) | `"Y"` |
-| `address` | `String` | 오프라인 팝업스토어 주소 | `"서울특별시 강남구 테헤란로 123"` |
-| `category` | `String` | 팝업스토어 카테고리 | `"패션 / 액세서리 / 리빙"` |
-| `image`   | `String` | 팝업스토어 대표 이미지 URL | `"https://example.com/image.jpg"` |
+| 필드명    | 타입    | 설명                  | 예시 값                              |
+|----------|--------|---------------------|-----------------------------------|
+| `popId`  | `long`   | 팝업스토어 고유 ID         | `1`                               |
+| `title`  | `String` | 팝업스토어 제목            | `"봄맞이 핸드메이드 마켓"`                  |
+| `email`  | `String` | 등록한 사용자 이메일         | `"user@example.com"`              |
+| `content` | `String` | 팝업스토어 설명            | `"핸드메이드 제품을 판매하는 팝업스토어"`          |
+| `start`  | `String` | 시작 날짜 (yyyy-MM-dd)  | `"2025-03-01"`                    |
+| `exp`    | `String` | 종료 날짜 (yyyy-MM-dd)  | `"2025-03-07"`                    |
+| `offline` | `String` | 오프라인 여부 (`0` / `1`) | `"1"`                             |
+| `address` | `String` | 오프라인 팝업스토어 주소       | `"서울특별시 강남구 테헤란로 123"`            |
+| `category` | `String` | 팝업스토어 카테고리          | `"패션 / 액세서리 / 리빙"`                |
+| `image`   | `String` | 팝업스토어 썸네일 이미지 URL   | `"https://example.com/image.jpg"` |
