@@ -118,4 +118,8 @@ public class CartService {
             cartRepository.save(cartItem);
         }
     }
+
+    public void deleteItem(Long itemId) {
+        cartRepository.deleteById(itemId);
+    }
 }

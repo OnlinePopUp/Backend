@@ -41,4 +41,12 @@ public class CartController {
         cartService.decreaseCartItem(token, itemId, cartDto.getAmount());
         return ResponseEntity.ok().build();
     }
+
+    // 장바구니에서 아이템 삭제
+    @DeleteMapping("{cartId}")
+    public void deleteCartItem(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long cartId) {
+        cartService.deleteItem(cartId);
+    }
 }
