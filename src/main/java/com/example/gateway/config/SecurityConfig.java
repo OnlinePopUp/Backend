@@ -57,7 +57,7 @@ public class SecurityConfig {
                         "/user/**","/admin/**",
                         "/chat/**", "/popup/**"
                 ).permitAll()
-                .pathMatchers("/user/admin").hasRole("ROLE_ADMIN")
+                .pathMatchers("/admin/**").hasRole("ROLE_ADMIN")
                 .anyExchange().authenticated());
 
         http.addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION);
