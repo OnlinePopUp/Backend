@@ -24,8 +24,8 @@ jobs:
       # 3. application.yml 동적 생성 (GitHub Secrets에 APPLICATION_POPUP 등록 필요)
       - name:  application.yml 동적 생성
         run: |
-          echo "${{ secrets.APPLICATION_POPUP }}" > ./src/main/resources/application.yml
-          cat ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_POPUP }}" > ./src/main/resources/application.properties
+          cat ./src/main/resources/application.properties
 
       # 4. Gradle 빌드 및 테스트 수행
       - name: Gradle 빌드 및 테스트 수행
