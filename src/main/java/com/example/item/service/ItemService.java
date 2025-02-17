@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -71,7 +72,6 @@ public class ItemService {
         }
 
     }
-
 
     // 아이템 조회
     public ResponseEntity<?> getAllItemsByPopId(Long popId) {
@@ -201,7 +201,7 @@ public class ItemService {
         return ResponseEntity.ok(itemDtos);
     }
 
-    // 검색(아이템 이름 또는 설명)을 통한 아이템 조회
+    // 검색(아이템 이름 또는 설명)을 통한 아이템들 조회
     public ResponseEntity<?> searchItems(String keyword) {
         // 검색된 아이템 목록 조회 (이름 또는 설명에 keyword 포함)
         List<ItemEntity> itemEntities = itemRepository.findByNameContainingOrDesContaining(keyword, keyword);
@@ -231,5 +231,33 @@ public class ItemService {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(itemDtos);
+    }
+
+    // itemId로 아이템 검색
+    public ResponseEntity<?> getItem(Long itemId) {
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("해당 아이템을 찾을 수 없습니다."));
+
+        List<Long> itemIds = Collections.singletonList(itemEntity.getItemId());
+
+        Map<Long, List<String>> itemFileMap = itemIds.stream()
+                .collect(Collectors.toMap(
+                        id -> id,
+                        itemFileRepository::findByItemId
+                ));
+
+        ItemDto itemDto = ItemDto.builder()
+                .itemId(itemEntity.getItemId())
+                .popId(itemEntity.getPopId())
+                .name(itemEntity.getName())
+                .amount(itemEntity.getAmount())
+                .price(itemEntity.getPrice())
+                .des(itemEntity.getDes())
+                .email(itemEntity.getEmail())
+                .itemFiles(itemFileMap.getOrDefault(itemEntity.getItemId(), new ArrayList<>()))
+                .image(itemEntity.getImage())
+                .build();
+
+        return ResponseEntity.ok(itemDto);
     }
 }

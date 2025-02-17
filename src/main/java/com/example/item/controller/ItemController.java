@@ -62,4 +62,8 @@ public class ItemController {
     public ResponseEntity<?> searchItems(@RequestParam String keyword) {
         return itemService.searchItems(keyword);
     }
+
+    // 선택한 ItemId로 아이템 조회
+    @GetMapping("/itemDetail/{itemId}")
+    public ResponseEntity<?> getItem(@PathVariable Long itemId) {return itemService.getItem(itemId);}
 }
