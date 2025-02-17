@@ -24,7 +24,7 @@ public class PopupStoreService {
                 .title(storeDto.getTitle())
                 .content(storeDto.getContent())
                 .start(PopupStore.parseDateTime(storeDto.getStart()))
-                .end(PopupStore.parseDateTime(storeDto.getEnd()))
+                .exp(PopupStore.parseDateTime(storeDto.getExp()))
                 .offline(storeDto.getOffline())
                 .address(storeDto.getAddress())
                 .category(storeDto.getCategory())
