@@ -102,7 +102,7 @@ public class CommentService {
         if(comment == null)
             return ResponseEntity.badRequest().body("존재하지 않는 댓글입니다.");
 
-        Optional<CommentHeart> commentHeart = commentHeartRepository.findById(cmtId);
+        Optional<CommentHeart> commentHeart = commentHeartRepository.findByCmtIdAndEmail(cmtId,email);
 
         if(commentHeart.isPresent())
             return ResponseEntity.badRequest().body("이미 좋아요 하신 상태입니다.");
