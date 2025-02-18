@@ -15,7 +15,7 @@ public class PopupStoreController {
 
     // 팝업스토어 개설과 동시에 상품 등록 API
     @PostMapping("/create")
-    public ResponseEntity<?> createPopupStore(@RequestBody PopupCreationRequest request) {
+    public ResponseEntity<?> createPopupStore(@RequestHeader("X-Auth-User") String email, @RequestBody PopupCreationRequest request) {
         return popupStoreService.createPopupStore(request);
     }
 }

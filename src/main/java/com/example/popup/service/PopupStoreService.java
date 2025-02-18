@@ -15,12 +15,12 @@ public class PopupStoreService {
     private final PopupStoreRepository popupStoreRepository;
 
     // 팝업스토어 개설 API (상품 등록 없이 팝업스토어만 생성)
-    public ResponseEntity<?> createPopupStore(PopupCreationRequest request) {
+    public ResponseEntity<?> createPopupStore(String email, PopupCreationRequest request) {
         // PopupCreationRequest에 팝업스토어 정보만 포함되어 있다고 가정합니다.
         PopupStoreDto storeDto = request.getPopupStoreDto();
 
         PopupStore popupStore = PopupStore.builder()
-                .email(storeDto.getEmail())
+                .email(email)
                 .title(storeDto.getTitle())
                 .content(storeDto.getContent())
                 .start(PopupStore.parseDateTime(storeDto.getStart()))
