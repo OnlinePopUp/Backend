@@ -57,4 +57,9 @@ public class BoardController {
         return boardService.deleteLike(token,boardId);
     }
 
+    @GetMapping("/likepost")
+    public ResponseEntity<?> likePost(String email,int size, int page) {
+        return boardService.likePost(email,size,page);
+    }
+
 }

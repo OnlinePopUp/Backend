@@ -291,4 +291,39 @@ public class BoardService {
 
         return ResponseEntity.ok("좋아요가 취소되었습니다.");
     }
+
+    public ResponseEntity<?> likePost(String email,int size,int page) {
+        Sort sortByIdDesc = Sort.by(Sort.Order.desc("boardId"));
+        Pageable pageable = PageRequest.of(page, size, sortByIdDesc);
+        Page<BoardHeart> boardHeartList = boardHeartRepository.findByEmail(pageable,email);
+
+        List<BoardDto> boardDtoList = new ArrayList<>();
+        List<String> nicknameList = new ArrayList<>();
+
+        for(BoardHeart boardHeart : boardHeartList){
+            Board board = boardRepository.findById(boardHeart.getBoardId()).orElse(null);
+
+            if(board == null) continue;
+
+            BoardDto boardDto = new BoardDto();
+            boardDto.setName(board.getName());
+            boardDto.setContent(board.getContent());
+            boardDto.setEmail(board.getEmail());
+            boardDto.setBoardId(board.getBoardId());
+            boardDto.setCnt(board.getCnt());
+            boardDto.setHeart(board.getHeart());
+            boardDto.setCreated(board.getCreated());
+            boardDto.setPopId(board.getPopId());
+
+            User user = userRepository.findById(board.getEmail()).orElse(null);
+
+            nicknameList.add(user.getNickname());
+            boardDtoList.add(boardDto);
+        }
+        return ResponseEntity.ok(Map.of(
+                "board", boardDtoList,
+                "nickname", nicknameList
+        ));
+
+    }
 }
