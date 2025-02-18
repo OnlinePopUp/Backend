@@ -33,11 +33,19 @@ public class OrderController {
         return ResponseEntity.ok().body(paymentItems);
     }
 
-    // 주문 조회 (결제 정보를 클릭 또는 상세정보 보기를 누르면 보이는 정보 -> 1개만 return)
+    // 주문 조회 (결제 정보를 클릭 또는 상세정보 보기를 누르면 보이는 정보 -> 1개의 주문만 return)
     @GetMapping("/payment/{paymentId}")
     public ResponseEntity<List<OrderDto>> getOrderItems(@RequestHeader("Authorization") String token,
                                                   @PathVariable long paymentId) {
         List<OrderDto> orderItems = orderService.getOrderItems(token, paymentId);
         return ResponseEntity.ok().body(orderItems);
+    }
+
+    // 주문 조회 판매자시점 (popId를 기반으로 판매한 내역을 볼 수 있음)
+    @GetMapping("/seller/{popId}")
+    public ResponseEntity<List<OrderDto>> getSoldItem(@RequestHeader("Authorization") String token,
+                                                        @PathVariable long popId) {
+        List<OrderDto> soldItems = orderService.getSoldItem(popId);
+        return ResponseEntity.ok().body(soldItems);
     }
 }

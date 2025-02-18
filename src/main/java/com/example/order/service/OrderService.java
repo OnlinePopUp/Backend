@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +38,6 @@ public class OrderService {
 
         List<ItemEntity> itemEntities = itemRepository.findListByPopIdAndItemId(orderDto.getPopId(), orderDto.getItemId());
 
-
-
         String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         orderDto.setOrderDate(currentDate);
 
@@ -62,7 +63,6 @@ public class OrderService {
             }
             // 잔액 차감
             user.setPoint(user.getPoint() - totalPrice);
-            System.out.println("유저의 남은 잔액: " + user.getPoint());
             usersRepository.save(user);
 
             // 재고 차감
@@ -138,5 +138,39 @@ public class OrderService {
                         .paymentId(paymentEntity.getPaymentId())
                         .build())
                 .toList();
+    }
+
+    // 판매자의 판매 내여 조회 (popId로 기반한 주문 내역 조회)
+    public List<OrderDto> getSoldItem(long popId) {
+        List<OrderEntity> orderEntities = orderRepository.findByPopId(popId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return orderEntities.stream()
+                .sorted(Comparator.comparing(
+                        order -> parseDate(order.getOrderDate(), formatter), Comparator.reverseOrder()))
+                .map(order ->  OrderDto.builder()
+                        .orderId(order.getOrderId())
+                        .itemId(order.getItemId())
+                        .popId(order.getPopId())
+                        .email(order.getEmail())
+                        .totalPrice(order.getTotalPrice())
+                        .itemName(order.getItemName())
+                        .buyerName(order.getBuyerName())
+                        .buyerAddress(order.getBuyerAddress())
+                        .buyerPhone(order.getBuyerPhone())
+                        .totalAmount(order.getTotalAmount())
+                        .orderDate(order.getOrderDate())
+                        .imageUrl(order.getImageUrl())
+                        .paymentId(order.getPaymentId())
+                        .build())
+                .toList();
+    }
+
+    // 문자열을 LocalDateTime으로 변환
+    private LocalDateTime parseDate(String dateStr, DateTimeFormatter formatter) {
+        try {
+            return LocalDateTime.parse(dateStr, formatter);
+        } catch (Exception e) {
+            return LocalDateTime.MIN; // 변환 실패 시 가장 오래된 날짜로 설정
+        }
     }
 }
