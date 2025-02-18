@@ -80,6 +80,7 @@
 | `/item`  | `GET`    | 전체 팝업 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`, `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
 | `/item/search?keyword=아이템이름 or 아이템설명` | `GET`    | 검색을 통한 팝업 아이템 조회 |`keyword` (requestParam)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` |
 | `/item/{itemId}`  | `DELETE`    | 팝업 아이템 삭제 |`itemId` (pathVariable)  |**성공**: `204 No Content`<br>**실패**:`400 Bad Request`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
+| `/item/itemDetail/{itemId}`  | `GET`    | 팝업 아이템 하나를 선택하여 조회 |`itemId` (pathVariable)  |**성공**: `200 OK`, `itemDto (json) ` |
 
 
 <br><br>
@@ -102,6 +103,7 @@
 | `/order`  | `POST`    | 장바구니의 아이템들 주문하기 |`orderDto` (json) {"buyName": "주문자성함","buyerAddress": 배송지,"buyerPhone": 구매자폰번호}  | **성공**: `200 OK`, `orderDto반환`<br>**실패**: `400 Bad Request`, `"장바구니가 비어있어 주문할 수 없습니다."`, `"구매자의 잔액이 부족합니다."`, `"상품의 재고가 부족합니다."` |
 | `/order/payment`    | `GET`    | 결제 정보 조회(최근 주문 일자 순) | 헤더의 `Authorization`으로 조회 |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`|
 | `/order/payment/{paymentId}`    | `GET`    | 결제 상세 정보(주문 정보) |`paymentId` (pathVariable) |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` <br>**실패**: `400 Bad Request`, `"해당 email의 주문을 찾을 수 없습니다.: " + email + "해당 paymentId의 주문을 찾을 수 없습니다.: " + paymentId`  |
+| `/order/seller/{popId}`    | `GET`    | 주문 정보 조회 (판매자 시점) |`popId` (pathVariable) |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` |
 
 
 <br><br>
