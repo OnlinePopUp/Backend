@@ -1,8 +1,10 @@
 package com.example.popup.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PopupStoreDto {
     private String email;     // 소유자 이메일
     private String title;     // 스토어 이름
