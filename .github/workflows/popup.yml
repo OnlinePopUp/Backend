@@ -27,7 +27,7 @@ jobs:
           echo "${{ secrets.APPLICATION_POPUP }}" > ./src/main/resources/application.properties
           cat ./src/main/resources/application.properties
 
-      # 4. Gradle 빌드 및 테스트 수행d
+      # 4. Gradle 빌드 및 테스트 수행
       - name: Gradle 빌드 및 테스트 수행
         run: |
           chmod +x ./gradlew
