@@ -1,110 +1,147 @@
-# AuthController
+# 목차
 
-| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
-|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/auth/login`    | `POST`    | 사용자 로그인            | `email` (String), `password` (String), `nickname` (String), `birth` (String), `phone` (String), `address` (String) | `200 OK`: `"로그인 성공"`, 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> `400 Bad Request`: `"사용자를 찾을 수 없습니다."` 또는 `"비밀번호 불일치"` |
-| `/auth/join`     | `POST`    | 사용자 회원가입          | `email`, `password`, `birth`, `phone`, `address`, `nickname` (모두 필수) | `200 OK`: `"회원가입이 완료되었습니다."` <br> `200 OK`: `"이미 존재하는 ID입니다"` |
-| `/auth/logout`   | `POST`    | 로그아웃 처리            | 없음 (쿠키에서 `refresh` 토큰 필요)                           | `200 OK`: `"로그아웃 성공"` <br> `400 Bad Request`: `"refresh 존재하지 않음"` |
-| `/auth/reissue`  | `GET`     | Access Token 재발급     | `email` (String)                                             | `200 OK`: `"access token 재발급 성공"`, 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> `400 Bad Request`: `"refresh 존재하지 않음"` 또는 `"refresh 토큰 만료. 재로그인 바람"` |
+1. [프로젝트 목적](#프로젝트-목적)
+2. [프로젝트 소개](#프로젝트-소개)
+3. [기술 스택](#기술-스택)
+4. [주요 기능](#주요-기능)
+5. [API 명세](#api-명세)
+6. [SnapShot](#snapshot)
+7. [시연 영상](#시연-영상)
+<br></br>
 
-<br><br>
+# 프로젝트 목적
+MSA 구조 기반의 프로젝트
+<br></br>
+# 프로젝트 소개
 
-# UserController API
+온라인 팝업 스토어 사이트입니다.
 
-| **Endpoint**       | **Method** | **Description**         | **Request Parameters** | **Response** |
-|-------------------|-----------|-------------------------|-----------------------|-------------|
-| `/user/follow`   | `POST`    | 특정 사용자를 팔로우    | `Authorization: Bearer {AccessToken}`, `flwEmail` (String) | `200 OK`: `"팔로우 되었습니다"` <br> `400 Bad Request`: `"이미 팔로우가 되있는 상태"` 또는 `"유효하지 않은 토큰"` |
-| `/user/delete/follow` | `POST` | 특정 사용자의 팔로우 해제 | `Authorization: Bearer {AccessToken}`, `flwEmail` (String) | `200 OK`: `"언팔로우 되었습니다"` <br> `400 Bad Request`: `"팔로우 하지 않은 상태"` 또는 `"유효하지 않은 토큰"` |
-| `/user/follow/all` | `GET` | 특정 사용자의 팔로워 및 팔로잉 목록 조회 | `email` (String) | `200 OK`: `{ "flwerList": [...], "flwerCnt": n, "flwerNick": [...], "flwingList": [...], "flwingCnt": n, "flwingNick": [...] }` |
-| `/user/delete`  | `POST`    | 회원 탈퇴 | `Authorization: Bearer {AccessToken}`, `email` (String) | `200 OK`: `"탈퇴되었습니다."` <br> `400 Bad Request`: `"존재하지 않는 유저"` 또는 `"관리자 혹은 자신만 탈퇴 가능"` 또는 `"유효하지 않은 토큰"` |
-| `/user/update`  | `POST`    | 유저 정보 수정 | `Authorization: Bearer {AccessToken}`, `address` (String, 선택), `birth` (String, 선택), `phone` (String, 선택), `nickname` (String, 선택) | `200 OK`: `"유저 정보 수정 완료"` <br> `400 Bad Request`: `"존재하지 않는 유저"` 또는 `"유효하지 않은 토큰"` |
-| `/user/report` | `POST` | 특정 사용자를 신고 | `Authorization: Bearer {AccessToken}`, `email` (String, 필수), `content` (String, 필수) | `200 OK`: `"신고가 완료되었습니다."` <br> `400 Bad Request`: `"유효하지 않은 토큰"` |
-| `/user/fill/point` | `POST` | 포인트 충전 | `Authorization: Bearer {AccessToken}`, `point` (long, 필수) | `200 OK`: `"포인트가 충전되었습니다"` <br> `400 Bad Request`: `"유효하지 않은 토큰"` 또는 `"존재하지 않는 유저"` |
+이 사이트는 사용자가 온라인으로 팝업 스토어를 개최하는 기능, 온라인으로 팝업 물품을 구매하는 기능, 후기를 나눌 수 있는 후기 게시판을 제공합니다.
+<br></br>
+## 개발 기간
 
-<br><br>
+25.02.10 ~ 25.02.19 (1주)
+<br></br>
+## 팀원
 
-# AdminController API
+| Backend | Frontend | Frontend | Backend | Backend | 
+|:-------:|:-------:|:-------:|:-------:|:-------:|
+| <img src="https://github.com/user-attachments/assets/44c5ca02-64c7-4a53-8e27-dc125462651d" alt="증사 2" width="170" height="200"> | <img src="https://github.com/user-attachments/assets/44c5ca02-64c7-4a53-8e27-dc125462651d" alt="프로필" width="170" height="200"> |  <img src="https://github.com/user-attachments/assets/44c5ca02-64c7-4a53-8e27-dc125462651d" alt="프로필" width="170" height="200"> | <img src="https://github.com/user-attachments/assets/44c5ca02-64c7-4a53-8e27-dc125462651d" alt="프로필" width="170" height="200"> | <img src="https://github.com/user-attachments/assets/44c5ca02-64c7-4a53-8e27-dc125462651d" alt="프로필" width="170" height="200"> |
+| [김상훈](https://github.com/sanghunkim20)  | [윤병욱](https://github.com/ByeongukYun)  |[이주원](https://github.com/kanguju)  |[정병준](https://github.com/ttjbjtt)  |[채승표](https://github.com/py0o0)  |
 
-| **Endpoint**             | **Method** | **Description**                                                                                       | **Request Parameters**                                                                                                           | **Response**                                                                                         |
-|-------------------------|------------|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `/admin/join`            | `POST`     | 관리자가 새로운 관리자를 회원가입시킬 때 사용됩니다. 이미 등록된 이메일일 경우 실패               | `email` (String, 필수), `password` (String, 필수), `birth` (String, 필수), `phone` (String, 필수), `address` (String, 필수), `nickname` (String, 필수) | **성공**: `200 OK`, "관리자 회원가입이 완료되었습니다." <br> **실패**: `200 OK`, "이미 존재하는 ID입니다" |
-| `/admin/user/all`        | `GET`      | 관리자가 모든 사용자의 정보를 조회할 때 사용됩니다. 페이지 번호와 페이지당 사용자 수를 받음       | `size` (int, 페이지당 사용자 수), `page` (int, 페이지 번호)                                                                    | **성공**: `200 OK`, 사용자 리스트와 함께 반환 <br> **실패**: `400 Bad Request`, 잘못된 요청 파라미터 |
-| `/admin/report/all`      | `GET`      | 관리자가 모든 신고를 조회할 때 사용됩니다. 페이지 번호와 페이지당 신고 수를 받음                   | `size` (int, 페이지당 신고 수), `page` (int, 페이지 번호)                                                                      | **성공**: `200 OK`, 신고 리스트와 함께 반환 <br> **실패**: `400 Bad Request`, 잘못된 요청 파라미터 |
-| `/admin/report/{reportId}`| `GET`     | 관리자가 특정 신고 내용을 조회할 때 사용됩니다. 신고가 존재하지 않으면 실패                        | `reportId` (Long, 필수)                                                                                                         | **성공**: `200 OK`, 해당 신고 정보 반환 <br> **실패**: `400 Bad Request`, "신고 내용이 없습니다." |
+<br></br>
 
-<br><br>
+## 역할 분담
 
-# ChatController API
-
-| **Endpoint**             | **Method** | **Description**                                                                                       | **Request Parameters**                                                                                                           | **Response**                                                                                         |
-|-------------------------|------------|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| `/chat/pub/send`         | `@MessageMapping` | 사용자가 채팅을 보내면, 해당 메시지가 지정된 `rEmail`(받는 사람 이메일)으로 실시간 전송됩니다. | `ChatDto` <br> - `sEmail` (보내는 사람 이메일) <br> - `rEmail` (받는 사람 이메일) <br> - `content` (메시지 내용) | **성공**: 수신자에게 실시간으로 메시지가 전송됩니다. <br> **실패**: 메시지 발송 실패 시 별도 응답 없음 (WebSocket을 통한 송신) |
-| `/chat/history`          | `GET`      | 두 사용자가 주고받은 채팅 메시지 기록을 반환합니다.                                                    | `sEmail` (보내는 사람 이메일) <br> `rEmail` (받는 사람 이메일)                                                                  | **성공**: `200 OK` <br> `ChatDto` 목록 (보낸 사람과 받은 사람 간의 모든 채팅 메시지) <br> **실패**: `400 Bad Request`, `"존재하지 않는 유저"` |
-| `/chat/ws`               | `GET`      | 클라이언트가 `ws://<서버 주소>/chat/ws`로 연결하여 WebSocket을 통한 실시간 채팅 기능을 사용합니다.    | 없음                                                                                                                             | WebSocket 연결 활성화 |
-| `/chat/sub/{rEmail}`     | `GET`      | 수신자는 `/chat/sub/{자신의 Email}`을 구독하여 수신된 메시지를 실시간으로 수신합니다.               | 없음                                                                                                                             | 수신된 메시지를 실시간으로 받습니다. |
-
-<br><br>
-
-# BoardController API
-
-| **Endpoint**             | **Method** | **Description**                                                                                              | **Request Parameters**                                                                                                             | **Response**                                                                                          |
-|-------------------------|------------|----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| `/post/write`           | `POST`     | 게시글을 작성합니다. 첨부파일이 있을 경우 AWS S3에 업로드하여 파일 URL을 저장합니다.                                  | `name` (String, 게시글 제목) <br> `content` (String, 게시글 내용) <br> `files` (List<MultipartFile>, 첨부파일들)                    | **성공**: `200 OK`, `"게시글 작성 완료"` <br> **실패**: `400 Bad Request`, `"파일 형식이 잘못됨"`                           |
-| `/post/all`             | `GET`      | 게시글 목록을 조회합니다. 페이지네이션과 작성자 닉네임도 반환됩니다.                                             | `size` (int, 한 페이지에 표시할 게시글 수) <br> `page` (int, 페이지 번호)                                                          | **성공**: `200 OK`, 게시글 목록과 작성자 닉네임 목록 반환                                             |
-| `/post/{boardId}`       | `GET`      | 특정 게시글의 상세 정보를 조회합니다. 조회수와 댓글, 파일도 함께 반환됩니다.                                      | `boardId` (long, 게시글 ID)                                                                                                        | **성공**: `200 OK`, 게시글 상세 정보, 작성자 닉네임, 댓글 목록 반환 <br> **실패**: `400 Bad Request`, `"페이지가 존재하지 않습니다."` |
-| `/post/search`          | `GET`      | 특정 항목으로 게시글을 검색하여 조회합니다.                                                                  | `category` (String, 검색 항목: name, email, content) <br> `keyword` (String, 검색 키워드) <br> `size` (int, 한 페이지에 표시할 게시글 수) <br> `page` (int, 페이지 번호) | **성공**: `200 OK`, 검색된 게시글 목록과 작성자 닉네임 목록 반환                                      |
-| `/post/update/{boardId}` | `POST`     | 사용자가 작성한 게시글을 수정합니다. JWT 토큰을 이용해 작성자 여부를 검증합니다.                                        | `boardId` (long, 게시글 ID) <br> `content` (String, 수정할 게시글 내용)                                                              | **성공**: `200 OK`, `"게시글이 수정되었습니다."` <br> **실패**: `400 Bad Request`, `"게시글이 존재하지 않습니다."`, `"유효하지 않은 토큰"`, `"작성자만 수정할 수 있습니다."` |
-| `/post/delete/{boardId}` | `POST`     | 사용자가 작성한 게시글을 삭제합니다. JWT 토큰을 이용해 작성자 또는 관리자 여부를 검증합니다.                             | `boardId` (long, 게시글 ID)                                                                                                        | **성공**: `200 OK`, `"게시글이 삭제되었습니다."` <br> **실패**: `400 Bad Request`, `"게시글이 존재하지 않습니다."`, `"유효하지 않은 토큰"`, `"작성자 or 관리자만 삭제할 수 있습니다."` |
-| `/post/like/{boardId}`   | `POST`     | 특정 게시글에 좋아요를 추가합니다. 이미 좋아요를 누른 상태라면 실패 응답을 반환합니다.                                       | `boardId` (long, 게시글 ID)                                                                                                        | **성공**: `200 OK`, `"게시글 좋아요"` <br> **실패**: `400 Bad Request`, `"이미 좋아요 하신 상태입니다."`                      |
-| `/post/delete/like/{boardId}` | `POST` | 특정 게시글의 좋아요를 취소합니다. 좋아요를 누르지 않은 게시글에 대해 취소를 시도하면 실패 응답을 반환합니다. | `boardId` (long, 게시글 ID)                                                                                                        | **성공**: `200 OK`, `"좋아요가 취소되었습니다."` <br> **실패**: `400 Bad Request`, `"좋아요 하지 않은 게시글입니다."`             |
-| `post/likepost`              | `GET`      | 사용자가 좋아요한 게시글을 페이징 처리하여 반환합니다.                                                           | `email` (String, 사용자 이메일) <br> `size` (int, 페이지 크기) <br> `page` (int, 페이지 번호)                               | **성공**: `200 OK` <br> **실패**: `400 Bad Request`, `"사용자를 찾을 수 없습니다."`                      |
-
-<br><br>
-
-# CommentController API
-
-| **Endpoint**             | **Method** | **Description**                                                                                              | **Request Parameters**                                                                                                             | **Response**                                                                                          |
-|-------------------------|------------|----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| `/comment/write`        | `POST`     | 특정 게시글에 댓글을 작성합니다. 게시글이 존재하지 않으면 실패 응답을 반환합니다.                             | `content` (String, 댓글 내용) <br> `boardId` (long, 게시글 ID)                                                                      | **성공**: `200 OK`, `"댓글이 작성되었습니다."` <br> **실패**: `400 Bad Request`, `"게시글이 존재하지 않습니다."`                      |
-| `/comment/update/{cmtId}` | `POST`    | 사용자가 작성한 댓글을 수정합니다. JWT 토큰을 이용해 작성자 여부를 검증합니다.                                  | `cmtId` (long, 댓글 ID) <br> `content` (String, 수정할 내용)                                                                        | **성공**: `200 OK`, `"댓글이 수정되었습니다."` <br> **실패**: `400 Bad Request`, `"댓글이 존재하지 않습니다."`, `"유효하지 않은 토큰"`, `"작성자만 수정할 수 있습니다."` |
-| `/comment/delete/{cmtId}` | `POST`    | 사용자가 작성한 댓글을 삭제합니다. JWT 토큰을 이용해 작성자 또는 관리자 여부를 검증합니다.                      | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글이 삭제되었습니다."` <br> **실패**: `400 Bad Request`, `"댓글이 존재하지 않습니다."`, `"유효하지 않은 토큰"`, `"작성자 or 관리자만 삭제할 수 있습니다."` |
-| `/comment/like/{cmtId}`  | `POST`    | 특정 댓글에 좋아요를 추가합니다. 이미 좋아요를 누른 상태라면 실패 응답을 반환합니다.                            | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"이미 좋아요 하신 상태입니다."` |
-| `/comment/delete/like/{cmtId}` | `POST` | 특정 댓글의 좋아요를 취소합니다. 좋아요를 누르지 않은 댓글에 대해 취소를 시도하면 실패 응답을 반환합니다. | `cmtId` (long, 댓글 ID)                                                                                                            | **성공**: `200 OK`, `"댓글 좋아요 취소"` <br> **실패**: `400 Bad Request`, `"존재하지 않는 댓글입니다."`, `"좋아요 하신 상태가 아닙니다."`               |
-
-# ItemController API
-
-| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
-|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/item`  | `POST`    | 팝업 아이템 등록, 팝업을 만들지 않았으면 오류 반환 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`)) | **성공**: `200 OK`, `itemDto반환`<br>**실패**: `400 Bad Request`, `"해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."` |
-| `/item/{itemId}`    | `PUT`    | 팝업 아이템 수정 |Multipart/formData(`itemDto` (json) {"name": "아이템이름","amount": 수량,"price": 가격,"des": "설명"} `files` `(List<MultipartFile>`))  |**성공**: `200 OK`, `itemDto반환`<br>**실패**: `400 Bad Request`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
-| `/item/{popId}`    | `GET`    | 선택한 팝업의 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`, `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
-| `/item`  | `GET`    | 전체 팝업 아이템 조회 |`popId` (pathVariable)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`<br>**실패**: `400 Bad Request`, `"해당 팝업 ID를 가진 팝업 스토어가 존재하지 않습니다."`  |
-| `/item/search?keyword=아이템이름 or 아이템설명` | `GET`    | 검색을 통한 팝업 아이템 조회 |`keyword` (requestParam)  |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` |
-| `/item/{itemId}`  | `DELETE`    | 팝업 아이템 삭제 |`itemId` (pathVariable)  |**성공**: `204 No Content`<br>**실패**:`400 Bad Request`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."`  |
-| `/item/itemDetail/{itemId}`  | `GET`    | 팝업 아이템 하나를 선택하여 조회 |`itemId` (pathVariable)  |**성공**: `200 OK`, `itemDto (json) ` |
+#### 김상훈 (백엔드)
 
 
-<br><br>
-
-# CartController API
-
-| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
-|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/cart/{popId}/{itemId}`  | `POST`    | 장바구니에 팝업 아이템 담기 |`popId` (pathVariable), `itemId` (pathVariable), `amount` (json) {"amount":수량} | **성공**: `200 OK`, `amount반환`<br>**실패**: `400 Bad Request`, `"해당 popId에 해당하는 팝업스토어를 찾을 수 없습니다."`, `"해당 itemId에 해당하는 아이템을 찾을 수 없습니다."` |
-| `/cart`    | `GET`    | 장바구니 조회 | 헤더의 `Authorization`으로 조회 |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`|
-| `/cart/{itemId}`    | `PUT`    | 장바구니의 팝업 아이템 빼기 |`itemId` (pathVariable), `amount` (json) {"amount":수량} |**성공**: `200 OK` <br>**실패**: `400 Bad Request`, `"현재 수량보다 많은 수량을 뺄 수 없습니다."`  |
+<br>
+    
+#### 윤병욱 (프론트)
 
 
-<br><br>
+<br>
 
-# OrderController API
-
-| **Endpoint**      | **Method** | **Description**         | **Request Parameters**                                        | **Response** |
-|------------------|-----------|-------------------------|--------------------------------------------------------------|-------------|
-| `/order`  | `POST`    | 장바구니의 아이템들 주문하기 |`orderDto` (json) {"buyName": "주문자성함","buyerAddress": 배송지,"buyerPhone": 구매자폰번호}  | **성공**: `200 OK`, `orderDto반환`<br>**실패**: `400 Bad Request`, `"장바구니가 비어있어 주문할 수 없습니다."`, `"구매자의 잔액이 부족합니다."`, `"상품의 재고가 부족합니다."` |
-| `/order/payment`    | `GET`    | 결제 정보 조회(최근 주문 일자 순) | 헤더의 `Authorization`으로 조회 |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]`|
-| `/order/payment/{paymentId}`    | `GET`    | 결제 상세 정보(주문 정보) |`paymentId` (pathVariable) |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` <br>**실패**: `400 Bad Request`, `"해당 email의 주문을 찾을 수 없습니다.: " + email + "해당 paymentId의 주문을 찾을 수 없습니다.: " + paymentId`  |
-| `/order/seller/{popId}`    | `GET`    | 주문 정보 조회 (판매자 시점) |`popId` (pathVariable) |**성공**: `200 OK`, `List반환 [{json}, {json}, ...]` |
+#### 이주원 (프론트)
 
 
-<br><br>
+<br>
+
+#### 정병준 (백엔드)
+
+
+<br>
+
+#### 채승표 (백엔드)
+
+  - 유저 관련 기능
+    - JWT를 활용한 인증 및 인가 기능
+    - Redis 활용하여 Refresh 토큰 관리
+    - 회원 및 관리자 CURD
+    - 팔로우 및 신고 관련 기능
+    - 웹소켓을 활용한 1:1 채팅 기능
+    
+  - 게시글 관련 기능
+    - 게시글 및 댓글 CURD
+    - 게시글 및 댓글 좋아요 기능
+    - aws s3를 활용한 파일 업로드 기능
+    
+  - MSA 관련 기능
+    - 라우팅
+   
+<br>
+<br>
+
+ ## ERD
+<img src= "https://github.com/user-attachments/assets/c8fab37f-545b-4f46-8d6c-2a9ece3a5498" alt="DB" width="100%" height="auto">
+
+<br>
+
+# 기술 스택
+
+## **백엔드**
+- ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white)
+- ![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=SpringSecurity&logoColor=white)
+- ![JPA](https://img.shields.io/badge/JPA-6DB33F?style=flat-square&logo=Hibernate&logoColor=white)
+- ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-FF4C00?style=flat-square&logo=AmazonEC2&logoColor=white)
+- ![AWS RDS](https://img.shields.io/badge/AWS%20RDS-FF9900?style=flat-square&logo=AmazonAWS&logoColor=white)
+- ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat-square&logo=AmazonS3&logoColor=white)
+- ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white)
+- ![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white)
+- ![Redis](https://img.shields.io/badge/Redis-D92C2F?style=flat-square&logo=Redis&logoColor=white)
+- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white)
+- ![WebSocket](https://img.shields.io/badge/WebSocket-1C6DD0?style=flat-square&logo=websocket&logoColor=white)
+
+## **프론트엔드**
+- ![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white)
+- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white)
+- ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=Next.js&logoColor=white)
+
+## **협업 툴**
+- ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white)
+
+## **개발 툴**
+- ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat-square&logo=VisualStudioCode&logoColor=white)
+- ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat-square&logo=IntelliJIDEA&logoColor=white)
+  
+ <br></br>
+# 주요 기능
+
+## 1. 유저
+
+- JWT를 활용한 인가 및 인증 기능
+- Redis로 Refresh 토큰 관리
+- 회원 및 관리자 CRUD
+- 팔로우 및 신고 기능
+- 팔로우/팔로워 리스트 조회
+- 신고 조회 및 상세 조회
+- 웹소켓을 활용한 1:1 채팅 기능
+- 장바구니 및 결제 기능
+
+## 2. 게시판
+
+- 게시글 CRUD
+- 댓글 CRUD
+- 좋아요 및 조회수 기능
+- 이미지 파일 업로드 기능
+- 작성한 글 및 좋아요한 글 조회
+
+## 3. 팝업 스토어
+
+
+## 4. 상품
+
+
+
+# API 명세
+
+[API 명세 바로가기](https://patch-brochure-60e.notion.site/API-1993e509776d807fbdc2cf4ebff0a263?pvs=74)
+
+# SnapShot
+
+[SnapShot 바로가기]()
+
+# 시연 영상
+
+[시연 영상 바로가기]()
