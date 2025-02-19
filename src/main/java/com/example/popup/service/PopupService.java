@@ -120,4 +120,22 @@ public class PopupService {
         return ResponseEntity.ok("팝업 스토어 수정");
     }
 
+    public ResponseEntity<?> getId(long popupId) {
+        Popup popup = popupRepository.findById(popupId).orElse(null);
+        if(popup == null)
+            return ResponseEntity.badRequest().body("존재하지않는 팝업 스토어");
+
+        PopupDto popupDto = new PopupDto();
+        popupDto.setTitle(popup.getTitle());
+        popupDto.setContent(popup.getContent());
+        popupDto.setStart(popup.getStart());
+        popupDto.setExp(popup.getExp());
+        popupDto.setCategory(popup.getCategory());
+        popupDto.setOffline(popup.getOffline());
+        popupDto.setAddress(popup.getAddress());
+        popupDto.setPopId(popup.getPopId());
+        popupDto.setImage(popup.getImage());
+        popupDto.setEmail(popup.getEmail());
+        return ResponseEntity.ok(popupDto);
+    }
 }

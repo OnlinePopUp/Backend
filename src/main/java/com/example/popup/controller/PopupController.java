@@ -29,4 +29,9 @@ public class PopupController {
                                     PopupDto popupDto, MultipartFile file) { // Dto는 popId email image 빼고 전부
         return popupService.update(token, popupDto, file);
     }
+
+    @GetMapping("/{popupId}")
+    public ResponseEntity<?> getId(@PathVariable long popupId) { // Dto는 popId email image 빼고 전부
+        return popupService.getId(popupId);
+    }
 }
