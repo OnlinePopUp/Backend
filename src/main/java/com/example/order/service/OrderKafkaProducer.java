@@ -18,8 +18,10 @@ public class OrderKafkaProducer {
         try {
             String message = objectMapper.writeValueAsString(purchaseDto);
             kafkaTemplate.send("item_purchase", message);
+            System.out.println("전송 성공: " + message );
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            System.out.println("전송 실패: " + e.getMessage());
         }
     }
 }

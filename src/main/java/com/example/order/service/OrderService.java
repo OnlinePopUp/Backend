@@ -27,6 +27,7 @@ public class OrderService {
     private final PaymentRepository paymentRepository;
     private final UsersRepository usersRepository;
     private final ItemRepository itemRepository;
+    private final PopUpRepository popUpRepository;
     private final JwtUtil jwtUtil;
     private final OrderKafkaProducer orderKafkaProducer;
 
@@ -107,15 +108,24 @@ public class OrderService {
         // 장바구니 비우기
         cartRepository.deleteByEmail(email);
 
-        // Kafka 메시지 전송
-        PurchaseDto purchaseDto = new PurchaseDto(
-                cartItems.stream()
-                        .map(cart -> new ItemDto(cart.getItemName(), cart.getAmount(), cart.getPrice()))
-                        .toList(),
-                jwtUtil.getEmail(token), // 구매자 이메일
-                orderDto.getEmail() // 판매자 이메일
-        );
-        orderKafkaProducer.sendPurchaseMessage(purchaseDto);
+    // Kafka 메시지 전송
+        for (CartEntity cartItem : cartItems) {
+            // popId 기반으로 판매자 이메일 조회
+            PopUpEntity popUpEntity = popUpRepository.findById(cartItem.getPopId())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 popId에 대한 판매자를 찾을 수 없습니다: " + cartItem.getPopId()));
+
+            String sellerEmail = popUpEntity.getEmail(); // 판매자의 이메일 가져오기
+
+            // 구매 정보 DTO 생성
+            PurchaseDto purchaseDto = new PurchaseDto(
+                    List.of(new ItemDto(cartItem.getItemName(), cartItem.getAmount(), cartItem.getPrice())),
+                    email,           // 구매자 이메일
+                    sellerEmail      // 판매자 이메일
+            );
+
+            // Kafka 메시지 전송 (각 판매자에게 개별적으로)
+            orderKafkaProducer.sendPurchaseMessage(purchaseDto);
+        }
     }
 
     // 주문 상세정보
