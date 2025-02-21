@@ -41,6 +41,7 @@ public class ChatService {
 
     @KafkaListener(topics = "comment", groupId = "team")
     public void commentKafka(String message) {
+        System.out.println("여까진옴");
         String email;
         try{
             email = objectMapper.readValue(message, String.class);
