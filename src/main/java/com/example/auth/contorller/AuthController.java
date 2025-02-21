@@ -20,6 +20,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(String email, String password, HttpServletResponse res) {
+        System.out.println("로그인이당 ㅎㅎㅎㅎㅎ");
         return authService.login(email,password,res);
     }
 
