@@ -112,7 +112,7 @@ public class OrderService {
                 cartItems.stream()
                         .map(cart -> new ItemDto(cart.getItemName(), cart.getAmount(), cart.getPrice()))
                         .toList(),
-                email, // 구매자 이메일
+                jwtUtil.getEmail(token), // 구매자 이메일
                 orderDto.getEmail() // 판매자 이메일
         );
         orderKafkaProducer.sendPurchaseMessage(purchaseDto);
