@@ -27,7 +27,7 @@ public class ChatService {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "item_purchase", groupId = "team")
-    public void userSignUp(String message) {
+    public void purchaseKafka(String message) {
         PurchaseDto purchaseDto;
         try{
             purchaseDto = objectMapper.readValue(message, PurchaseDto.class);
@@ -37,6 +37,19 @@ public class ChatService {
             return;
         }
         messagingTemplate.convertAndSend("/chat/sub/" + purchaseDto.getSeller(), purchaseDto);
+    }
+
+    @KafkaListener(topics = "comment", groupId = "team")
+    public void commentKafka(String message) {
+        String email;
+        try{
+            email = objectMapper.readValue(message, String.class);
+            System.out.println("알림 보낼 놈: " + email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        messagingTemplate.convertAndSend("/chat/sub/" + email, "누가 댓글 적음");
     }
 
     public void sendMessage(String sEmail, String rEmail, String content) {
