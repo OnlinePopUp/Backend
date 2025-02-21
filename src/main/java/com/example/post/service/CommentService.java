@@ -7,9 +7,12 @@ import com.example.post.jwt.JwtUtil;
 import com.example.post.repository.BoardRepository;
 import com.example.post.repository.CommentHeartRepository;
 import com.example.post.repository.CommentRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,8 +24,10 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final CommentHeartRepository commentHeartRepository;
     private final JwtUtil jwtUtil;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
-    public ResponseEntity<?> write(String token,String content, long boardId) {
+    public ResponseEntity<?> write(String token,String content, long boardId) throws JsonProcessingException {
         String email;
         try{
             email = jwtUtil.getEmail(token);
@@ -41,6 +46,10 @@ public class CommentService {
          comment.setBoardId(boardId);
 
          commentRepository.save(comment);
+
+
+        kafkaTemplate.send("comment", objectMapper.writeValueAsString(board.getEmail()));
+        System.out.println("카프카 전송 완료");
 
          return ResponseEntity.ok("댓글이 작성되었습니다.");
     }
