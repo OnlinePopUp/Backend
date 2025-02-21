@@ -1,11 +1,14 @@
 package com.example.order.service;
 
+import com.example.order.dto.ItemDto;
 import com.example.order.dto.OrderDto;
+import com.example.order.dto.PurchaseDto;
 import com.example.order.entity.*;
 import com.example.order.jwt.JwtUtil;
 import com.example.order.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +28,7 @@ public class OrderService {
     private final UsersRepository usersRepository;
     private final ItemRepository itemRepository;
     private final JwtUtil jwtUtil;
+    private final OrderKafkaProducer orderKafkaProducer;
 
     // 주문 처리 및 결제 정보 저장
     @Transactional
@@ -102,6 +106,16 @@ public class OrderService {
 
         // 장바구니 비우기
         cartRepository.deleteByEmail(email);
+
+        // Kafka 메시지 전송
+        PurchaseDto purchaseDto = new PurchaseDto(
+                cartItems.stream()
+                        .map(cart -> new ItemDto(cart.getItemName(), cart.getAmount(), cart.getPrice()))
+                        .toList(),
+                email, // 구매자 이메일
+                orderDto.getEmail() // 판매자 이메일
+        );
+        orderKafkaProducer.sendPurchaseMessage(purchaseDto);
     }
 
     // 주문 상세정보
