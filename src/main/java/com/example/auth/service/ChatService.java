@@ -1,17 +1,21 @@
 package com.example.auth.service;
 
 import com.example.auth.dto.ChatDto;
+import com.example.auth.dto.PurchaseDto;
 import com.example.auth.entity.Chat;
 import com.example.auth.entity.User;
 import com.example.auth.repository.ChatRepository;
 import com.example.auth.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Service
@@ -20,6 +24,20 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
+
+    @KafkaListener(topics = "item_purchase", groupId = "team")
+    public void userSignUp(String message) {
+        PurchaseDto purchaseDto;
+        try{
+            purchaseDto = objectMapper.readValue(message, PurchaseDto.class);
+            System.out.println("유저 회원가입 정보: " + purchaseDto.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        messagingTemplate.convertAndSend("/chat/sub/" + purchaseDto.getSeller(), purchaseDto);
+    }
 
     public void sendMessage(String sEmail, String rEmail, String content) {
         User ruser = userRepository.findById(rEmail).orElse(null);
