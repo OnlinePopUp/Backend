@@ -58,15 +58,16 @@ public class PopupService {
     }
 
     public ResponseEntity<?> getAll(String category, int page, int size) {
-        Pageable pageable;
-        if(category.equals("마감일순")){
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "exp"));
-        }else if(category.equals("등록일순")){
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "popId"));
-        }else{ // 이름 순
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "title"));
+        Page<Popup> popups;
+        if(category.equals("전체")) {
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "popId"));
+            popups = popupRepository.findAll(pageable);
         }
-        Page<Popup> popups = popupRepository.findAll(pageable);
+        else {
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "popId"));
+            popups = popupRepository.findByCategory(pageable, category);
+        }
+
         List<PopupDto> popupDtoList = new ArrayList<>();
 
         for(Popup popup: popups){
@@ -137,5 +138,29 @@ public class PopupService {
         popupDto.setImage(popup.getImage());
         popupDto.setEmail(popup.getEmail());
         return ResponseEntity.ok(popupDto);
+    }
+
+    public ResponseEntity<?> search(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "popId"));
+        Page<Popup> popups = popupRepository.findByTitle(pageable);
+
+        List<PopupDto> popupDtoList = new ArrayList<>();
+
+        for(Popup popup: popups){
+            PopupDto popupDto = new PopupDto();
+            popupDto.setTitle(popup.getTitle());
+            popupDto.setContent(popup.getContent());
+            popupDto.setStart(popup.getStart());
+            popupDto.setExp(popup.getExp());
+            popupDto.setCategory(popup.getCategory());
+            popupDto.setOffline(popup.getOffline());
+            popupDto.setAddress(popup.getAddress());
+            popupDto.setPopId(popup.getPopId());
+            popupDto.setImage(popup.getImage());
+            popupDto.setEmail(popup.getEmail());
+
+            popupDtoList.add(popupDto);
+        }
+        return ResponseEntity.ok(popupDtoList);
     }
 }

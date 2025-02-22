@@ -34,4 +34,9 @@ public class PopupController {
     public ResponseEntity<?> getId(@PathVariable long popupId) { // Dto는 popId email image 빼고 전부
         return popupService.getId(popupId);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(String keyword,int page, int size) {
+        return popupService.search(keyword,page,size);
+    }
 }
