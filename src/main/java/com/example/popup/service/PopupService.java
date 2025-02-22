@@ -142,7 +142,7 @@ public class PopupService {
 
     public ResponseEntity<?> search(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "popId"));
-        Page<Popup> popups = popupRepository.findByTitle(pageable);
+        Page<Popup> popups = popupRepository.findByTitle(pageable,keyword);
 
         List<PopupDto> popupDtoList = new ArrayList<>();
 

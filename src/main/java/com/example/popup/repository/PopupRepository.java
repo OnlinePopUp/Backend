@@ -12,5 +12,5 @@ public interface PopupRepository extends JpaRepository<Popup, Long> {
     Page<Popup> findByCategory(Pageable pageable, String category);
 
     @Query("SELECT p FROM Popup p WHERE p.title LIKE %:keyword%")
-    Page<Popup> findByTitle(Pageable pageable);
+    Page<Popup> findByTitle(Pageable pageable, String keyword);
 }
