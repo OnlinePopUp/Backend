@@ -2,13 +2,13 @@
 
 ## 1️⃣ 로그인 (Login)
 
-| 항목         | 내용                                                                                                                                 |
-|--------------|------------------------------------------------------------------------------------------------------------------------------------|
-| **URL**      | `/auth/login`                                                                                                                      |
-| **Method**   | `POST`                                                                                                                             |
-| **Request 파라미터** | `email` (String), `password` (String), `nickname` (String), `birth` (String), `phone` (String), `address` (String)                 |
-| **Response** | **성공**: `200 OK`, `"로그인 성공"`, 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> **실패**: `400 Bad Request`, `"사용자를 찾을 수 없습니다."` 또는 `"비밀번호 불일치"` |
-| **설명**      | 사용자가 로그인 시, **email**과 **password**로 인증을 시도합니다. 로그인 성공 시 **access token**이 반환되며, **refresh token**은 쿠키에 저장됩니다.                     |
+| 항목         | 내용                                                                                                                                          |
+|--------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| **URL**      | `/auth/login`                                                                                                                               |
+| **Method**   | `POST`                                                                                                                                      |
+| **Request 파라미터** | `email` (String), `password` (String), `nickname` (String), `birth` (String), `phone` (String), `address` (String)                          |
+| **Response** | **성공**: `200 OK`, `userDto` (UserDto), 응답 헤더: `AccessToken: 새로운 액세스 토큰` <br> **실패**: `400 Bad Request`, `"사용자를 찾을 수 없습니다."` 또는 `"비밀번호 불일치"` |
+| **설명**      | 사용자가 로그인 시, **email**과 **password**로 인증을 시도합니다. 로그인 성공 시 **access token** 과 **UserDto**가 반환되며, **refresh token**은 쿠키에 저장됩니다.                |
 
 ---
 
@@ -46,17 +46,6 @@
 | **설명**      | 사용자의 `refresh token`을 기반으로 새로운 **access token**을 발급합니다. `refresh token`이 만료되었거나 존재하지 않는 경우, `"refresh 토큰 만료. 재로그인 바람"` 메시지가 반환됩니다. |
 
 ---
-
-## 8️⃣ 포인트 충전 (Fill Point)
-
-| 항목             | 내용                                                   |
-|------------------|------------------------------------------------------|
-| **URL**         | `/user/fill/point`                                    |
-| **Method**      | `POST`                                               |
-| **Request 헤더** | `Authorization: Bearer {AccessToken}`                 |
-| **Request 파라미터** | `point` (long, 필수)                                |
-| **Response**    | **성공**: `200 OK`, `"포인트가 충전되었습니다"` <br> **실패**: `400 Bad Request`, `"유효하지 않은 토큰"` 또는 `"존재하지 않는 유저"` |
-| **설명**        | `Authorization` 헤더의 **access token**을 이용하여 사용자의 포인트를 충전합니다. |
 
 <br><br>
 
@@ -148,6 +137,19 @@
 | **Request 파라미터** | `email` (String, 필수) <br> `content` (String, 필수) |
 | **Response**    | **성공**: `200 OK`, `"신고가 완료되었습니다."` <br> **실패**: `400 Bad Request`, `"유효하지 않은 토큰"` |
 | **설명**        | `Authorization` 헤더의 **access token**을 이용하여 특정 사용자를 신고합니다. |
+
+---
+
+## 8️⃣ 포인트 충전 (Fill Point)
+
+| 항목             | 내용                                                   |
+|------------------|------------------------------------------------------|
+| **URL**         | `/user/fill/point`                                    |
+| **Method**      | `POST`                                               |
+| **Request 헤더** | `Authorization: Bearer {AccessToken}`                 |
+| **Request 파라미터** | `point` (long, 필수)                                 |
+| **Response**    | **성공**: `200 OK`, `"포인트가 충전되었습니다. 현재 포인트 : {현재 포인트}"` <br> **실패**: `400 Bad Request`, `"유효하지 않은 토큰"` 또는 `"존재하지 않는 유저"` |
+| **설명**        | `Authorization` 헤더의 **access token**을 이용하여 사용자의 포인트를 충전합니다. |
 
 <br><br>
 

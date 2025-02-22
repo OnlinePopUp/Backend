@@ -226,8 +226,8 @@ public class UserService {
         if(user == null)
             return ResponseEntity.badRequest().body("존재하지 않는 유저");
 
-        user.setPoint(point);
+        user.setPoint(user.getPoint() + point);
         userRepository.save(user);
-        return ResponseEntity.ok("포인트가 충전되었습니다");
+        return ResponseEntity.ok("포인트가 충전되었습니다. 현재 포인트 : " + user.getPoint());
     }
 }

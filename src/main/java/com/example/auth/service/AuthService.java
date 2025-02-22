@@ -41,7 +41,15 @@ public class AuthService {
 
         res.addCookie(creatCookie("refresh", refreshToken)); //리프레시는 쿠키로 전송
         res.addHeader("access-token", accessToken);
-        return ResponseEntity.ok("로그인 성공");
+        UserDto userDto = new UserDto();
+
+        userDto.setEmail(email);
+        userDto.setBirth(user.getBirth());
+        userDto.setNickname(user.getNickname());
+        userDto.setPhone(user.getPhone());
+        userDto.setPoint(user.getPoint());
+        userDto.setRole(role);
+        return ResponseEntity.ok(userDto);
     }
 
     private Cookie creatCookie(String key, String value) {

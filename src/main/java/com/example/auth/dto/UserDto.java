@@ -10,4 +10,7 @@ public class UserDto {
     String address;
     String phone;
     String birth;
+
+    String role;
+    long point;
 }
