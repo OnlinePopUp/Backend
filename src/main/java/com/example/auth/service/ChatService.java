@@ -1,6 +1,7 @@
 package com.example.auth.service;
 
 import com.example.auth.dto.ChatDto;
+import com.example.auth.dto.KafkaCommentDto;
 import com.example.auth.dto.PurchaseDto;
 import com.example.auth.entity.Chat;
 import com.example.auth.entity.User;
@@ -31,26 +32,27 @@ public class ChatService {
         PurchaseDto purchaseDto;
         try{
             purchaseDto = objectMapper.readValue(message, PurchaseDto.class);
-            System.out.println("유저 회원가입 정보: " + purchaseDto.toString());
+            System.out.println("구매 정보: " + purchaseDto.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        messagingTemplate.convertAndSend("/chat/sub/" + purchaseDto.getSeller(), purchaseDto);
+        messagingTemplate.convertAndSend("/chat/sub/" + purchaseDto.getSeller(),
+                "구매 알림 : " + purchaseDto);
     }
 
     @KafkaListener(topics = "comment", groupId = "team")
     public void commentKafka(String message) {
-        System.out.println("여까진옴");
-        String email;
+        KafkaCommentDto kafkaCommentDto;
         try{
-            email = objectMapper.readValue(message, String.class);
-            System.out.println("알림 보낼 놈: " + email);
+            kafkaCommentDto = objectMapper.readValue(message, KafkaCommentDto.class);
+            System.out.println("댓글 알림: " + kafkaCommentDto.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        messagingTemplate.convertAndSend("/chat/sub/" + email, "누가 댓글 적음");
+        messagingTemplate.convertAndSend("/chat/sub/" + kafkaCommentDto.getEmail(),
+                "댓글 알림 : " + kafkaCommentDto.getBoardId() + " 게시글에 댓글 작성됨");
     }
 
     public void sendMessage(String sEmail, String rEmail, String content) {
