@@ -1,5 +1,6 @@
 package com.example.post.service;
 
+import com.example.post.dto.KafkaCommentDto;
 import com.example.post.entity.Board;
 import com.example.post.entity.Comment;
 import com.example.post.entity.CommentHeart;
@@ -47,9 +48,12 @@ public class CommentService {
 
          commentRepository.save(comment);
 
+         KafkaCommentDto kafkaCommentDto = new KafkaCommentDto();
+         kafkaCommentDto.setEmail(board.getEmail());
+         kafkaCommentDto.setBoardId(board.getBoardId());
 
-        kafkaTemplate.send("comment", objectMapper.writeValueAsString(board.getEmail()));
-        System.out.println("카프카 전송 완료");
+         kafkaTemplate.send("comment", objectMapper.writeValueAsString(kafkaCommentDto));
+         System.out.println("카프카 전송 완료");
 
          return ResponseEntity.ok("댓글이 작성되었습니다.");
     }
