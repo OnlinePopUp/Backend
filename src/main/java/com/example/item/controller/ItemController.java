@@ -18,13 +18,13 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
 
-    // 아이템 등록
-    @PostMapping
+    // 선택한 popId를 기반으로 아이템 등록
+    @PostMapping("/{popId}")
     public ResponseEntity<?> createItem(
-            @RequestHeader("Authorization") String token,
+            @PathVariable Long popId,
             @RequestPart("itemDto") ItemDto itemDto,
             @RequestPart(name = "files", required = false) List<MultipartFile> files) throws IOException {
-        itemService.saveItem(token, itemDto, files);
+        itemService.saveItem(popId, itemDto, files);
         return ResponseEntity.ok().body(itemDto);
     }
 

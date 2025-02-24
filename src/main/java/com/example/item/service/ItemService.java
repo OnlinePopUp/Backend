@@ -27,13 +27,12 @@ public class ItemService {
     private final PopUpRepository popUpRepository;
     private final ItemFileRepository itemFileRepository;
     private final AwsS3Service awsS3Service;
-    private final JwtUtil jwtUtil;
 
     // 아이템 생성
-    public void saveItem(String token, ItemDto itemDto,
+    public void saveItem(Long popId, ItemDto itemDto,
                          List<MultipartFile> files) throws IOException {
-        PopUpEntity popUpEntity = popUpRepository.findByEmail(jwtUtil.getEmail(token))
-                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 팝업 스토어가 존재하지 않습니다."));
+        PopUpEntity popUpEntity = popUpRepository.findByPopId(popId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 popId의 팝업 스토어가 존재하지 않습니다."));
 
         ItemEntity item = ItemEntity.builder()
                 .itemId(itemDto.getItemId())
@@ -42,7 +41,7 @@ public class ItemService {
                 .amount(itemDto.getAmount())
                 .price(itemDto.getPrice())
                 .des(itemDto.getDes())
-                .email(jwtUtil.getEmail(token))
+                .email(popUpEntity.getEmail())
                 .build();
 
         itemRepository.save(item);
