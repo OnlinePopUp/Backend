@@ -108,7 +108,7 @@ public class OrderService {
         // 장바구니 비우기
         cartRepository.deleteByEmail(email);
 
-    // Kafka 메시지 전송
+    // Kafka 메시지 전송, Kafka 테스트
         for (CartEntity cartItem : cartItems) {
             // popId 기반으로 판매자 이메일 조회
             PopUpEntity popUpEntity = popUpRepository.findById(cartItem.getPopId())
